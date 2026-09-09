@@ -7,22 +7,21 @@
 @theme {
     --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     
-    /* Official USU Brand Color System */
-    --color-usu-primary: #487629;
-    --color-usu-secondary: #529A3D;
-    --color-usu-light: #5CB733;
-    --color-usu-dark: #31521F;
+    --color-usu-primary: #0B6839;
+    --color-usu-secondary: #15803D;
+    --color-usu-light: #487629;
+    --color-usu-dark: #074324;
     --color-usu-gold: #F6AE01;
     --color-usu-orange: #F28800;
     --color-usu-deep-orange: #EB680D;
     
-    --color-usu-bg: #F7F8F6;
+    --color-usu-bg: #F8FAF7;
     --color-usu-surface: #FFFFFF;
-    --color-usu-border: #E5E7E3;
+    --color-usu-border: #E2E8F0;
     
-    --color-usu-text: #172019;
-    --color-usu-text-secondary: #5F685F;
-    --color-usu-text-muted: #8A928A;
+    --color-usu-text: #0F172A;
+    --color-usu-text-secondary: #475569;
+    --color-usu-text-muted: #94A3B8;
 }
 
 /* Custom base styles */
@@ -31,9 +30,10 @@ html {
 }
 
 body {
-    background-color: #F7F8F6;
-    color: #172019;
+    background-color: #F8FAF7;
+    color: #0F172A;
     font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* Material Symbols configuration */
@@ -51,27 +51,34 @@ body {
     line-height: 1;
 }
 
-/* Subtle clean scrollbars */
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #F7F8F6;
+    background: #F1F5F9;
 }
 ::-webkit-scrollbar-thumb {
-    background: #487629;
+    background: #0B6839;
     border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #31521F;
+    background: #074324;
 }
 
-/* Card hover micro-interaction */
+/* Card hover animation */
 .usu-card-transition {
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
 }
 .usu-card-transition:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px -6px rgba(49, 82, 31, 0.08);
+    box-shadow: 0 12px 28px -6px rgba(11, 104, 57, 0.12);
 }
+
+/* Hero section dark green banner */
+.usu-hero-bg {
+    background: linear-gradient(135deg, #022513 0%, #074324 55%, #0B6839 100%) !important;
+}
+
+

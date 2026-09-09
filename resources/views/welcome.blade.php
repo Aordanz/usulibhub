@@ -1,1822 +1,935 @@
-<!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>USU Library Hub — Perpustakaan Universitas Sumatera Utara</title>
-    <meta name="description" content="Pusat layanan digital terpadu Perpustakaan Universitas Sumatera Utara (USU) untuk sivitas akademika, peneliti, dan masyarakat.">
-    <link rel="icon" href="https://usu.ac.id/favicon.ico" type="image/x-icon">
+@extends('layouts.app')
 
-    <!-- Fonts: Plus Jakarta Sans & Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Material Symbols Outlined -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+@section('title', 'Informasi Umum — Perpustakaan Universitas Sumatera Utara')
+@section('meta_description', 'Portal Resmi Informasi Umum Perpustakaan Universitas Sumatera Utara: profil, jam layanan resmi, katalog online, repositori, e-journal, fasilitas, dan berita terkini.')
 
-    <!-- Vite Assets / Inline Styles -->
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-            tailwind.config = {
-                darkMode: 'class',
-                theme: {
-                    extend: {
-                        colors: {
-                            usu: {
-                                primary: '#487629',
-                                secondary: '#529A3D',
-                                light: '#5CB733',
-                                dark: '#31521F',
-                                gold: '#F6AE01',
-                                orange: '#F28800',
-                                'deep-orange': '#EB680D',
-                                bg: '#F7F8F6',
-                                surface: '#FFFFFF',
-                                border: '#E5E7E3',
-                                text: '#172019',
-                                'text-secondary': '#5F685F',
-                                'text-muted': '#8A928A',
-                            }
-                        },
-                        fontFamily: {
-                            sans: ['"Plus Jakarta Sans"', '"Inter"', 'sans-serif'],
-                        }
-                    }
-                }
-            }
-        </script>
-    @endif
-
-    <style>
-        :root {
-            --color-usu-primary: #487629;
-            --color-usu-secondary: #529A3D;
-            --color-usu-light: #5CB733;
-            --color-usu-dark: #31521F;
-            --color-usu-gold: #F6AE01;
-            --color-usu-orange: #F28800;
-            --color-usu-deep-orange: #EB680D;
-            --color-usu-bg: #F7F8F6;
-            --color-usu-surface: #FFFFFF;
-            --color-usu-border: #E5E7E3;
-            --color-usu-text: #172019;
-            --color-usu-text-secondary: #5F685F;
-            --color-usu-text-muted: #8A928A;
-        }
-
-        body {
-            background-color: var(--color-usu-bg);
-            color: var(--color-usu-text);
-            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            display: inline-block;
-            vertical-align: middle;
-            line-height: 1;
-        }
-
-        .usu-card {
-            background-color: #FFFFFF;
-            border: 1px solid #E5E7E3;
-            border-radius: 14px;
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
-        }
-
-        .usu-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px -4px rgba(49, 82, 31, 0.08);
-            border-color: #D3D8D0;
-        }
-
-        .usu-btn-primary {
-            background-color: #487629;
-            color: #FFFFFF;
-            font-weight: 600;
-            border-radius: 10px;
-            transition: all 0.15s ease;
-        }
-        .usu-btn-primary:hover {
-            background-color: #31521F;
-        }
-
-        .usu-btn-secondary {
-            background-color: #FFFFFF;
-            color: #487629;
-            border: 1px solid #487629;
-            font-weight: 600;
-            border-radius: 10px;
-            transition: all 0.15s ease;
-        }
-        .usu-btn-secondary:hover {
-            background-color: #F0F4EE;
-        }
-
-        /* Badge styles */
-        .badge-google-form {
-            background-color: #FFF7ED;
-            color: #C2410C;
-            border: 1px solid #FFEDD5;
-        }
-        .badge-online {
-            background-color: #F0FDF4;
-            color: #15803D;
-            border: 1px solid #DCFCE7;
-        }
-        .badge-whatsapp {
-            background-color: #ECFDF5;
-            color: #047857;
-            border: 1px solid #D1FAE5;
-        }
-        .badge-reservasi {
-            background-color: #F0F4EE;
-            color: #31521F;
-            border: 1px solid #DCE3D9;
-        }
-        .badge-luring {
-            background-color: #F3F4F6;
-            color: #4B5563;
-            border: 1px solid #E5E7EB;
-        }
-
-        /* Status indicators */
-        .status-dot-tersedia {
-            background-color: #5CB733;
-            box-shadow: 0 0 0 3px rgba(92, 183, 51, 0.2);
-        }
-        .status-dot-terpakai {
-            background-color: #DC2626;
-            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
-        }
-        .status-dot-menunggu {
-            background-color: #F6AE01;
-            box-shadow: 0 0 0 3px rgba(246, 174, 1, 0.2);
-        }
-        .status-dot-tutup {
-            background-color: #8A928A;
-        }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col selection:bg-[#F6AE01] selection:text-[#31521F]">
-
-    <!-- Institutional Top Navigation Bar -->
-    <header class="sticky top-0 z-40 bg-[#FFFFFF]/95 backdrop-blur-md border-b border-[#E5E7E3] shadow-[0_1px_3px_0_rgba(0,0,0,0.03)]">
-        <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-18">
-                
-                <!-- Left: Identity -->
-                <a href="/" class="flex items-center gap-3.5 group">
-                    <div class="w-10 h-10 rounded-lg bg-[#487629] text-white flex items-center justify-center shadow-xs group-hover:bg-[#31521F] transition-colors">
-                        <span class="material-symbols-outlined text-2xl text-[#F6AE01]">local_library</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <div class="flex items-center gap-2">
-                            <span class="text-lg font-bold tracking-tight text-[#172019]">USU Library <span class="text-[#487629]">Hub</span></span>
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#F0F4EE] text-[#487629] border border-[#DCE3D9]">Portal Layanan</span>
-                        </div>
-                        <span class="text-[11px] font-medium text-[#5F685F]">Perpustakaan Universitas Sumatera Utara</span>
-                    </div>
-                </a>
-
-                <!-- Center: Navigation Links (Desktop) -->
-                <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-[#5F685F]">
-                    <a href="#beranda" class="text-[#487629] font-semibold">Beranda</a>
-                    <a href="#layanan" class="hover:text-[#487629] transition-colors">Layanan</a>
-                    <a href="#fasilitas" class="hover:text-[#487629] transition-colors">Fasilitas & Ruang</a>
-                    <a href="#jadwal" class="hover:text-[#487629] transition-colors">Jadwal Ruangan</a>
-                    <a href="#jam-layanan" class="hover:text-[#487629] transition-colors">Jam Layanan</a>
-                </nav>
-
-                <!-- Right: Actions & User Menu -->
-                <div class="flex items-center gap-3">
-                    <button type="button" onclick="focusSearchInput()" class="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs text-[#5F685F] bg-[#F7F8F6] hover:bg-[#EAECE8] border border-[#E5E7E3] rounded-lg transition-colors">
-                        <span class="material-symbols-outlined text-sm">search</span>
-                        <span>Cari</span>
-                        <kbd class="px-1.5 py-0.5 text-[10px] font-semibold bg-white border border-[#E5E7E3] rounded text-[#8A928A]">⌘K</kbd>
-                    </button>
-
-                    <!-- Auth Dropdown State / Simulation -->
-                    <div class="relative" id="user-menu-container">
-                        <button type="button" id="login-btn" onclick="openLoginModal()" class="usu-btn-primary px-4 py-2 text-xs flex items-center gap-1.5">
-                            <span class="material-symbols-outlined text-sm">login</span>
-                            <span>Masuk Akun</span>
-                        </button>
-                    </div>
-
-                    <!-- Mobile Menu Trigger -->
-                    <button type="button" id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2 text-[#5F685F] hover:text-[#172019] rounded-lg hover:bg-[#F0F4EE]">
-                        <span class="material-symbols-outlined text-2xl">menu</span>
-                    </button>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Mobile Navigation Panel -->
-        <div id="mobile-nav-panel" class="hidden md:hidden border-t border-[#E5E7E3] bg-[#FFFFFF] px-4 py-4 space-y-3">
-            <nav class="flex flex-col space-y-2 text-sm font-medium text-[#5F685F]">
-                <a href="#beranda" class="px-3 py-2 rounded-lg bg-[#F0F4EE] text-[#487629] font-semibold">Beranda</a>
-                <a href="#layanan" class="px-3 py-2 rounded-lg hover:bg-[#F7F8F6]">Layanan</a>
-                <a href="#fasilitas" class="px-3 py-2 rounded-lg hover:bg-[#F7F8F6]">Fasilitas & Ruang</a>
-                <a href="#jadwal" class="px-3 py-2 rounded-lg hover:bg-[#F7F8F6]">Jadwal Ruangan</a>
-                <a href="#jam-layanan" class="px-3 py-2 rounded-lg hover:bg-[#F7F8F6]">Jam Layanan</a>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Main Workspace Container -->
-    <main class="flex-1 max-w-[1280px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-16 sm:space-y-20">
+@section('content')
+<!-- HERO SHOWCASE BANNER: SLIDER UTAMA LAYANAN PERPUSTAKAAN USU -->
+<section id="beranda" class="space-y-4">
+    <div class="usu-card overflow-hidden border-2 border-[#C2E4CD] shadow-xl bg-[#042514] relative group/slider rounded-2xl" id="layanan-slider-container">
         
-        <!-- SECTION 1: HOMEPAGE HERO & SERVICE DISCOVERY -->
-        <section id="beranda" class="space-y-8">
-            <div class="text-center max-w-3xl mx-auto space-y-4">
+        <!-- Animated 10-Second Progress Bar -->
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-black/40 z-30 overflow-hidden">
+            <div id="slider-progress-bar" class="h-full bg-gradient-to-r from-[#F6AE01] via-[#10B981] to-[#FEC52E]" style="width: 0%;"></div>
+        </div>
+
+        <!-- Top Badges & Status Info -->
+        <div class="absolute top-4 left-4 sm:top-5 sm:left-6 z-30 flex items-center gap-2 pointer-events-none">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-black/70 backdrop-blur-md text-white text-xs font-bold border border-white/20 shadow-sm">
+                <img src="{{ asset('logousu.webp') }}" alt="Logo USU" class="w-4 h-4 object-contain">
+                <span id="slider-current-badge">UPT Perpustakaan Universitas Sumatera Utara</span>
+            </span>
+        </div>
+
+        <!-- Slider Track Container -->
+        <div class="relative w-full h-[360px] sm:h-[440px] md:h-[480px] overflow-hidden">
+            <div id="layanan-slider-track" class="flex h-full w-full transition-transform duration-700 ease-out" style="transform: translateX(0%);">
                 
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F0F4EE] border border-[#DCE3D9] text-[#487629] text-xs font-semibold">
-                    <span class="w-2 h-2 rounded-full bg-[#5CB733] animate-pulse"></span>
-                    <span>Pusat Layanan Terpadu Perpustakaan USU</span>
-                </div>
-
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#172019] tracking-tight leading-[1.15]">
-                    Temukan Layanan <span class="text-[#487629]">Perpustakaan USU</span>
-                </h1>
-
-                <p class="text-base sm:text-lg text-[#5F685F] leading-relaxed max-w-2xl mx-auto">
-                    Semua layanan, fasilitas, dan kebutuhan perpustakaan dalam satu tempat untuk mendukung proses belajar dan riset Anda.
-                </p>
-
-            </div>
-
-            <!-- Prominent Central Search Bar with Intelligent Suggestion Layer -->
-            <div class="max-w-2xl mx-auto relative">
-                <div class="relative flex items-center shadow-[0_2px_12px_rgba(0,0,0,0.06)] rounded-2xl bg-white border-2 border-[#E5E7E3] focus-within:border-[#487629] focus-within:ring-4 focus-within:ring-[#487629]/10 transition-all">
-                    <div class="pl-4.5 pr-2 text-[#5F685F]">
-                        <span class="material-symbols-outlined text-2xl">search</span>
-                    </div>
-                    <input 
-                        type="text" 
-                        id="main-search-input" 
-                        placeholder="Cari layanan, fasilitas, atau ruangan..." 
-                        class="w-full py-4 pr-12 text-sm sm:text-base text-[#172019] placeholder-[#8A928A] bg-transparent outline-none"
-                        autocomplete="off"
-                    >
-                    <button type="button" id="clear-search-btn" class="hidden absolute right-4 text-[#8A928A] hover:text-[#172019]">
-                        <span class="material-symbols-outlined text-xl">cancel</span>
-                    </button>
-                </div>
-
-                <!-- Instant Search Suggestions Dropdown -->
-                <div id="search-suggestions" class="hidden absolute left-0 right-0 top-full mt-2 bg-white rounded-xl border border-[#E5E7E3] shadow-lg z-30 overflow-hidden divide-y divide-[#E5E7E3]">
-                    <div class="p-3 bg-[#F7F8F6] text-xs font-semibold text-[#5F685F] flex items-center justify-between">
-                        <span>Hasil & Rekomendasi Pencarian</span>
-                        <span id="suggestion-count" class="text-[11px] text-[#8A928A]">Tekan Enter untuk melihat semua</span>
-                    </div>
-                    <div id="suggestion-items" class="max-h-72 overflow-y-auto divide-y divide-[#F0F2EF]">
-                        <!-- Populated by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Quick Access Buttons -->
-                <div class="mt-4 flex items-center justify-center gap-2 sm:gap-3 flex-wrap text-xs">
-                    <span class="text-[#8A928A] font-medium hidden sm:inline">Akses Cepat:</span>
-                    <button type="button" onclick="quickFilterAction('Reservasi Ruangan')" class="px-3 py-1.5 rounded-lg bg-white border border-[#E5E7E3] text-[#487629] hover:bg-[#F0F4EE] hover:border-[#DCE3D9] font-medium transition-colors flex items-center gap-1.5 shadow-2xs">
-                        <span class="material-symbols-outlined text-sm text-[#487629]">meeting_room</span>
-                        <span>Reservasi Ruangan</span>
-                    </button>
-                    <button type="button" onclick="openServiceDetailModal('turnitin')" class="px-3 py-1.5 rounded-lg bg-white border border-[#E5E7E3] text-[#487629] hover:bg-[#F0F4EE] hover:border-[#DCE3D9] font-medium transition-colors flex items-center gap-1.5 shadow-2xs">
-                        <span class="material-symbols-outlined text-sm text-[#F6AE01]">spellcheck</span>
-                        <span>Uji Turnitin</span>
-                    </button>
-                    <button type="button" onclick="openServiceDetailModal('penelusuran-literatur')" class="px-3 py-1.5 rounded-lg bg-white border border-[#E5E7E3] text-[#487629] hover:bg-[#F0F4EE] hover:border-[#DCE3D9] font-medium transition-colors flex items-center gap-1.5 shadow-2xs">
-                        <span class="material-symbols-outlined text-sm text-[#529A3D]">travel_explore</span>
-                        <span>Penelusuran Literatur</span>
-                    </button>
-                    <button type="button" onclick="openServiceDetailModal('reservasi-buku')" class="px-3 py-1.5 rounded-lg bg-white border border-[#E5E7E3] text-[#487629] hover:bg-[#F0F4EE] hover:border-[#DCE3D9] font-medium transition-colors flex items-center gap-1.5 shadow-2xs">
-                        <span class="material-symbols-outlined text-sm text-[#487629]">auto_stories</span>
-                        <span>Reservasi Buku</span>
-                    </button>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- SECTION 2: LAYANAN POPULER -->
-        <section class="space-y-6">
-            <div class="flex items-center justify-between border-b border-[#E5E7E3] pb-3.5">
-                <div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-[#172019] tracking-tight">Layanan Populer</h2>
-                    <p class="text-xs sm:text-sm text-[#5F685F]">Layanan yang paling sering digunakan oleh sivitas akademika USU.</p>
-                </div>
-                <a href="#layanan" class="text-xs sm:text-sm font-semibold text-[#487629] hover:underline flex items-center gap-1">
-                    <span>Lihat Semua</span>
-                    <span class="material-symbols-outlined text-base">arrow_forward</span>
-                </a>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                
-                <!-- Populer 1: Uji Turnitin -->
-                <div class="usu-card p-5 flex flex-col justify-between" data-service-id="turnitin">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-10 h-10 rounded-lg bg-[#FFF7ED] text-[#C2410C] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-2xl">spellcheck</span>
-                            </div>
-                            <span class="badge-google-form text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
-                                <span class="material-symbols-outlined text-xs">description</span> Google Form
-                            </span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019] leading-snug">Uji Turnitin</h3>
-                        <p class="text-xs text-[#5F685F] line-clamp-2 leading-relaxed">
-                            Pemeriksaan tingkat kemiripan naskah skripsi, tesis, disertasi, dan artikel publikasi ilmiah.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">S1, S2, S3 & Dosen</span>
-                        <button type="button" onclick="openServiceDetailModal('turnitin')" class="text-xs font-bold text-[#487629] hover:text-[#31521F] flex items-center gap-1">
-                            <span>Ajukan</span>
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Populer 2: Penelusuran Literatur -->
-                <div class="usu-card p-5 flex flex-col justify-between" data-service-id="penelusuran-literatur">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-10 h-10 rounded-lg bg-[#F0FDF4] text-[#15803D] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-2xl">travel_explore</span>
-                            </div>
-                            <span class="badge-online text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
-                                <span class="material-symbols-outlined text-xs">public</span> Online
-                            </span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019] leading-snug">Penelusuran Literatur</h3>
-                        <p class="text-xs text-[#5F685F] line-clamp-2 leading-relaxed">
-                            Bantuan penelusuran artikel jurnal internasional bereputasi (Scopus, ScienceDirect, IEEE, dll).
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Daring / Konsultasi</span>
-                        <button type="button" onclick="openServiceDetailModal('penelusuran-literatur')" class="text-xs font-bold text-[#487629] hover:text-[#31521F] flex items-center gap-1">
-                            <span>Konsultasi</span>
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Populer 3: Reservasi Buku -->
-                <div class="usu-card p-5 flex flex-col justify-between" data-service-id="reservasi-buku">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-10 h-10 rounded-lg bg-[#F0F4EE] text-[#487629] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-2xl">auto_stories</span>
-                            </div>
-                            <span class="badge-reservasi text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
-                                <span class="material-symbols-outlined text-xs">bookmark</span> OPAC Reservasi
-                            </span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019] leading-snug">Reservasi Buku</h3>
-                        <p class="text-xs text-[#5F685F] line-clamp-2 leading-relaxed">
-                            Pemesanan buku cetak sirkulasi perpustakaan sebelum pengambilan langsung di lokasi.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Koleksi Fisik</span>
-                        <button type="button" onclick="openServiceDetailModal('reservasi-buku')" class="text-xs font-bold text-[#487629] hover:text-[#31521F] flex items-center gap-1">
-                            <span>Pesan Buku</span>
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Populer 4: Reservasi Ruangan (Real-time card) -->
-                <div class="usu-card p-5 flex flex-col justify-between border-l-4 border-l-[#487629]" data-service-id="reservasi-ruangan">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-10 h-10 rounded-lg bg-[#F0F4EE] text-[#487629] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-2xl">domain</span>
-                            </div>
-                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#F0FDF4] text-[#15803D] border border-[#DCFCE7]">
-                                <span class="w-2 h-2 rounded-full status-dot-tersedia"></span>
-                                <span>3 Ruang Siap</span>
-                            </span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019] leading-snug">Reservasi Ruangan</h3>
-                        <p class="text-xs text-[#5F685F] line-clamp-2 leading-relaxed">
-                            Peminjaman ruang diskusi, The Gade Creative Lounge, RUBELIN, dan ruang rapat.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Cek Jadwal & Slot</span>
-                        <button type="button" onclick="scrollToSection('fasilitas')" class="text-xs font-bold text-[#487629] hover:text-[#31521F] flex items-center gap-1">
-                            <span>Lihat Ruang</span>
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- SECTION 3: JELAJAHI LAYANAN (CATEGORY TABS & COMPLETE LIST) -->
-        <section id="layanan" class="space-y-8">
-            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E5E7E3] pb-4">
-                <div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-[#172019] tracking-tight">Jelajahi Layanan</h2>
-                    <p class="text-xs sm:text-sm text-[#5F685F]">Katalog lengkap seluruh layanan perpustakaan luring dan daring.</p>
-                </div>
-            </div>
-
-            <!-- Category Filter Tabs -->
-            <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-                <button type="button" onclick="setCategoryFilter('semua')" data-category="semua" class="category-tab px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-[#487629] text-white whitespace-nowrap transition-all shadow-2xs">
-                    Semua Layanan
-                </button>
-                <button type="button" onclick="setCategoryFilter('luring')" data-category="luring" class="category-tab px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white text-[#5F685F] hover:bg-[#F0F4EE] hover:text-[#172019] border border-[#E5E7E3] whitespace-nowrap transition-all">
-                    Layanan Luring
-                </button>
-                <button type="button" onclick="setCategoryFilter('daring')" data-category="daring" class="category-tab px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white text-[#5F685F] hover:bg-[#F0F4EE] hover:text-[#172019] border border-[#E5E7E3] whitespace-nowrap transition-all">
-                    Layanan Daring
-                </button>
-                <button type="button" onclick="setCategoryFilter('fasilitas')" data-category="fasilitas" class="category-tab px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white text-[#5F685F] hover:bg-[#F0F4EE] hover:text-[#172019] border border-[#E5E7E3] whitespace-nowrap transition-all">
-                    Fasilitas & Ruang
-                </button>
-                <button type="button" onclick="setCategoryFilter('keanggotaan')" data-category="keanggotaan" class="category-tab px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white text-[#5F685F] hover:bg-[#F0F4EE] hover:text-[#172019] border border-[#E5E7E3] whitespace-nowrap transition-all">
-                    Keanggotaan & Koleksi
-                </button>
-                <button type="button" onclick="setCategoryFilter('survei')" data-category="survei" class="category-tab px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white text-[#5F685F] hover:bg-[#F0F4EE] hover:text-[#172019] border border-[#E5E7E3] whitespace-nowrap transition-all">
-                    Survei & Umpan Balik
-                </button>
-            </div>
-
-            <!-- Service Grid Container -->
-            <div id="service-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                
-                <!-- [LURING] 1. Layanan Sirkulasi -->
-                <div class="service-item usu-card p-5 flex flex-col justify-between" data-category="luring" data-keywords="sirkulasi peminjaman buku pengembalian perpanjangan denda koleksi cetak">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-9 h-9 rounded-lg bg-[#F0F4EE] text-[#487629] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xl">sync_alt</span>
-                            </div>
-                            <span class="badge-luring text-[11px] font-semibold px-2 py-0.5 rounded-md">Luring / Di Tempat</span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019]">Layanan Sirkulasi</h3>
-                        <p class="text-xs text-[#5F685F] leading-relaxed">
-                            Informasi peminjaman, pengembalian, perpanjangan, dan sirkulasi koleksi buku fisik di meja layanan lantai 1.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Meja Sirkulasi Lantai 1</span>
-                        <button type="button" onclick="openServiceDetailModal('sirkulasi')" class="usu-btn-secondary px-3 py-1.5 text-xs">
-                            Lihat Layanan
-                        </button>
-                    </div>
-                </div>
-
-                <!-- [LURING] 2. Layanan Keanggotaan -->
-                <div class="service-item usu-card p-5 flex flex-col justify-between" data-category="luring" data-keywords="keanggotaan kartu anggota aktivasi ktm registrasi maba pemustaka">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-9 h-9 rounded-lg bg-[#F0F4EE] text-[#487629] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xl">badge</span>
-                            </div>
-                            <span class="badge-luring text-[11px] font-semibold px-2 py-0.5 rounded-md">Luring / Di Tempat</span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019]">Layanan Keanggotaan</h3>
-                        <p class="text-xs text-[#5F685F] leading-relaxed">
-                            Pendaftaran anggota baru, aktivasi KTM sebagai kartu perpustakaan, dan perpanjangan masa aktif keanggotaan.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Lantai 1 Front Office</span>
-                        <button type="button" onclick="openServiceDetailModal('keanggotaan')" class="usu-btn-secondary px-3 py-1.5 text-xs">
-                            Lihat Layanan
-                        </button>
-                    </div>
-                </div>
-
-                <!-- [LURING] 3. Bimbingan Pengguna -->
-                <div class="service-item usu-card p-5 flex flex-col justify-between" data-category="luring" data-keywords="bimbingan pemustaka orientasi library tour pengenalan fasilitas panduan">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-9 h-9 rounded-lg bg-[#F0F4EE] text-[#487629] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xl">support_agent</span>
-                            </div>
-                            <span class="badge-luring text-[11px] font-semibold px-2 py-0.5 rounded-md">Luring / Di Tempat</span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019]">Bimbingan Pengguna</h3>
-                        <p class="text-xs text-[#5F685F] leading-relaxed">
-                            Orientasi perpustakaan, panduan pemanfaatan OPAC, tata tertib, dan bimbingan langsung oleh staf pustakawan.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Info Desk</span>
-                        <button type="button" onclick="openServiceDetailModal('bimbingan')" class="usu-btn-secondary px-3 py-1.5 text-xs">
-                            Lihat Layanan
-                        </button>
-                    </div>
-                </div>
-
-                <!-- [LURING] 4. Layanan Referensi -->
-                <div class="service-item usu-card p-5 flex flex-col justify-between" data-category="luring" data-keywords="referensi rujukan kamus ensiklopedia karya rujukan khusus lantai 2">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-9 h-9 rounded-lg bg-[#F0F4EE] text-[#487629] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xl">menu_book</span>
-                            </div>
-                            <span class="badge-luring text-[11px] font-semibold px-2 py-0.5 rounded-md">Luring / Di Tempat</span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019]">Layanan Referensi</h3>
-                        <p class="text-xs text-[#5F685F] leading-relaxed">
-                            Akses koleksi rujukan khusus, ensiklopedia, kamus, direktori, handbook, dan koleksi Sumatera Corner.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Lantai 2 Ruang Referensi</span>
-                        <button type="button" onclick="openServiceDetailModal('referensi')" class="usu-btn-secondary px-3 py-1.5 text-xs">
-                            Lihat Layanan
-                        </button>
-                    </div>
-                </div>
-
-                <!-- [LURING] 5. Kelas Literasi Informasi -->
-                <div class="service-item usu-card p-5 flex flex-col justify-between" data-category="luring" data-keywords="kelas literasi informasi workshop pelatihan mendeley zotero sitasi jurnal">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-9 h-9 rounded-lg bg-[#F0F4EE] text-[#487629] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xl">co_present</span>
-                            </div>
-                            <span class="badge-luring text-[11px] font-semibold px-2 py-0.5 rounded-md">Workshop / Tatap Muka</span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019]">Kelas Literasi Informasi</h3>
-                        <p class="text-xs text-[#5F685F] leading-relaxed">
-                            Pelatihan intensif strategi pencarian database e-journal bereputasi, manajemen sitasi Mendeley, dan orisinalitas riset.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Jadwal Berkala</span>
-                        <button type="button" onclick="openServiceDetailModal('kelas-literasi')" class="usu-btn-secondary px-3 py-1.5 text-xs">
-                            Daftar Kelas
-                        </button>
-                    </div>
-                </div>
-
-                <!-- [DARING] 6. SKBP Online (Surat Keterangan Bebas Pustaka) -->
-                <div class="service-item usu-card p-5 flex flex-col justify-between" data-category="daring" data-keywords="skbp online surat keterangan bebas pustaka wisuda yudisium kelulusan">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-9 h-9 rounded-lg bg-[#F0FDF4] text-[#15803D] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xl">verified_user</span>
-                            </div>
-                            <span class="badge-online text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
-                                <span class="material-symbols-outlined text-xs">public</span> Online
-                            </span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019]">SKBP Online</h3>
-                        <p class="text-xs text-[#5F685F] leading-relaxed">
-                            Penerbitan Surat Keterangan Bebas Pustaka secara online untuk syarat pendaftaran yudisium dan wisuda mahasiswa.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Syarat Wisuda</span>
-                        <button type="button" onclick="openServiceDetailModal('skbp')" class="usu-btn-primary px-3 py-1.5 text-xs">
-                            Ajukan SKBP
-                        </button>
-                    </div>
-                </div>
-
-                <!-- [DARING] 7. Unggah Mandiri Karya Akhir -->
-                <div class="service-item usu-card p-5 flex flex-col justify-between" data-category="daring" data-keywords="unggah mandiri karya akhir repositori skripsi tesis disertasi upload repository">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-9 h-9 rounded-lg bg-[#F0FDF4] text-[#15803D] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xl">cloud_upload</span>
-                            </div>
-                            <span class="badge-online text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
-                                <span class="material-symbols-outlined text-xs">public</span> Online Portal
-                            </span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019]">Unggah Mandiri Karya Akhir</h3>
-                        <p class="text-xs text-[#5F685F] leading-relaxed">
-                            Portal mandiri untuk penyerahan naskah digital skripsi, tesis, dan disertasi ke Repositori Institusi USU.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Repositori USU</span>
-                        <button type="button" onclick="openServiceDetailModal('unggah-mandiri')" class="usu-btn-primary px-3 py-1.5 text-xs">
-                            Unggah Dokumen
-                        </button>
-                    </div>
-                </div>
-
-                <!-- [DARING] 8. Permintaan Karya Akhir Repository -->
-                <div class="service-item usu-card p-5 flex flex-col justify-between" data-category="daring" data-keywords="permintaan karya akhir repository fulltext restricted skripsi tesis pdf">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-9 h-9 rounded-lg bg-[#FFF7ED] text-[#C2410C] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xl">folder_zip</span>
-                            </div>
-                            <span class="badge-google-form text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
-                                <span class="material-symbols-outlined text-xs">description</span> Google Form
-                            </span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019]">Permintaan Karya Akhir Repository</h3>
-                        <p class="text-xs text-[#5F685F] leading-relaxed">
-                            Permohonan akses berkas lengkap (full-text) untuk dokumen riset terproteksi di repositori perpustakaan.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Akses Full-text</span>
-                        <button type="button" onclick="openServiceDetailModal('permintaan-karya-akhir')" class="usu-btn-primary px-3 py-1.5 text-xs">
-                            Minta Akses
-                        </button>
-                    </div>
-                </div>
-
-                <!-- [DARING] 9. Usulan Bahan Perpustakaan -->
-                <div class="service-item usu-card p-5 flex flex-col justify-between" data-category="daring" data-keywords="usulan bahan perpustakaan beli buku pengadaan jurnal usulan koleksi ebook">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-9 h-9 rounded-lg bg-[#FFF7ED] text-[#C2410C] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xl">add_shopping_cart</span>
-                            </div>
-                            <span class="badge-google-form text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
-                                <span class="material-symbols-outlined text-xs">description</span> Google Form
-                            </span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019]">Usulan Bahan Perpustakaan</h3>
-                        <p class="text-xs text-[#5F685F] leading-relaxed">
-                            Formulir rekomendasi pembelian buku teks, langganan e-journal, dan bahan pustaka baru bagi dosen & mahasiswa.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Pengadaan Koleksi</span>
-                        <button type="button" onclick="openServiceDetailModal('usulan-buku')" class="usu-btn-primary px-3 py-1.5 text-xs">
-                            Ajukan Usulan
-                        </button>
-                    </div>
-                </div>
-
-                <!-- [KEANGGOTAAN] 10. Pendaftaran Anggota Tamu -->
-                <div class="service-item usu-card p-5 flex flex-col justify-between" data-category="keanggotaan" data-keywords="pendaftaran anggota tamu alumni luar usu peneliti eksternal kunjungan kartu">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-9 h-9 rounded-lg bg-[#F0F4EE] text-[#487629] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xl">person_add</span>
-                            </div>
-                            <span class="badge-reservasi text-[11px] font-semibold px-2 py-0.5 rounded-md">Layanan Tamu</span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019]">Pendaftaran Anggota Tamu</h3>
-                        <p class="text-xs text-[#5F685F] leading-relaxed">
-                            Layanan keanggotaan dan izin baca di tempat untuk alumni USU, mahasiswa perguruan tinggi lain, dan peneliti luar.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Pemustaka Luar</span>
-                        <button type="button" onclick="openServiceDetailModal('anggota-tamu')" class="usu-btn-secondary px-3 py-1.5 text-xs">
-                            Daftar Tamu
-                        </button>
-                    </div>
-                </div>
-
-                <!-- [SURVEI] 11. Survei Kepuasan & Umpan Balik -->
-                <div class="service-item usu-card p-5 flex flex-col justify-between" data-category="survei" data-keywords="survei kepuasan pemustaka indeks saran evaluasi fasilitas umpan balik">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-9 h-9 rounded-lg bg-[#FFF7ED] text-[#C2410C] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xl">rate_review</span>
-                            </div>
-                            <span class="badge-google-form text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
-                                <span class="material-symbols-outlined text-xs">description</span> Kuesioner
-                            </span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019]">Survei Kepuasan Pengguna</h3>
-                        <p class="text-xs text-[#5F685F] leading-relaxed">
-                            Sampaikan evaluasi, penilaian kualitas layanan, dan masukan Anda untuk peningkatan mutu fasilitas Perpustakaan USU.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Evaluasi Rutin</span>
-                        <a href="https://bit.ly/SurveiPelayananPerpustakaan2026" target="_blank" rel="noopener noreferrer" class="usu-btn-secondary px-3 py-1.5 text-xs text-center">
-                            Isi Survei
-                        </a>
-                    </div>
-                </div>
-
-                <!-- [SURVEI] 12. Kotak Saran & Bantuan -->
-                <div class="service-item usu-card p-5 flex flex-col justify-between" data-category="survei" data-keywords="kotak saran pengaduan helpdesk kontak konsultasi pustakawan">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="w-9 h-9 rounded-lg bg-[#ECFDF5] text-[#047857] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-xl">chat</span>
-                            </div>
-                            <span class="badge-whatsapp text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1">
-                                <span class="material-symbols-outlined text-xs">chat</span> WhatsApp Helpdesk
-                            </span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#172019]">Kotak Saran & Pengaduan</h3>
-                        <p class="text-xs text-[#5F685F] leading-relaxed">
-                            Hubungi langsung tim layanan perpustakaan untuk pengaduan kendala akses, saran perbaikan, atau bantuan darurat.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-[#E5E7E3] flex items-center justify-between">
-                        <span class="text-[11px] font-medium text-[#8A928A]">Respon Cepat</span>
-                        <button type="button" onclick="openWhatsAppHelpdesk()" class="usu-btn-secondary px-3 py-1.5 text-xs">
-                            Hubungi Staf
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- SECTION 4: FASILITAS & RUANGAN (WITH REALTIME AVAILABILITY) -->
-        <section id="fasilitas" class="space-y-8">
-            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E5E7E3] pb-4">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full bg-[#5CB733] animate-pulse"></span>
-                        <h2 class="text-xl sm:text-2xl font-bold text-[#172019] tracking-tight">Fasilitas & Ruangan</h2>
-                    </div>
-                    <p class="text-xs sm:text-sm text-[#5F685F] mt-0.5">Lihat fasilitas perpustakaan dan ketersediaan ruangan secara langsung.</p>
-                </div>
-                <div class="flex items-center gap-4 text-xs">
-                    <span class="flex items-center gap-1.5 text-[#172019]"><span class="w-2.5 h-2.5 rounded-full status-dot-tersedia"></span> Tersedia</span>
-                    <span class="flex items-center gap-1.5 text-[#172019]"><span class="w-2.5 h-2.5 rounded-full status-dot-terpakai"></span> Terpakai</span>
-                    <span class="flex items-center gap-1.5 text-[#172019]"><span class="w-2.5 h-2.5 rounded-full status-dot-menunggu"></span> Menunggu</span>
-                </div>
-            </div>
-
-            <!-- Room Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <!-- Room 1: TGCL -->
-                <div class="usu-card overflow-hidden flex flex-col justify-between" id="room-card-tgcl">
-                    <div class="relative h-44 bg-[#EAECE8] overflow-hidden group">
-                        <!-- Stylized SVG Architectural Graphic Representation -->
-                        <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#487629]/15 to-[#31521F]/25 text-[#31521F]">
-                            <span class="material-symbols-outlined text-5xl mb-1 text-[#487629]">groups</span>
-                            <span class="text-xs font-bold uppercase tracking-wider text-[#31521F]">The Gade Creative Lounge</span>
-                        </div>
-                        <div class="absolute top-3 right-3">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-white text-[#15803D] shadow-sm border border-[#DCFCE7]">
-                                <span class="w-2 h-2 rounded-full status-dot-tersedia"></span>
-                                <span>Tersedia</span>
-                            </span>
-                        </div>
-                        <div class="absolute bottom-3 left-3 bg-[#172019]/80 backdrop-blur-xs text-white text-[11px] px-2.5 py-0.5 rounded-md font-medium">
-                            Lantai 1 • Kapasitas 40 Orang
-                        </div>
-                    </div>
-                    <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
-                        <div class="space-y-2">
-                            <h3 class="text-base font-bold text-[#172019]">The Gade Creative Lounge (TGCL)</h3>
-                            <p class="text-xs text-[#5F685F] leading-relaxed">
-                                Ruang kreatif kolaboratif dengan fasilitas Smart TV, Bean Bags, Podcast Pod, dan Wi-Fi berkecepatan tinggi.
-                            </p>
-                            <div class="flex flex-wrap gap-1.5 pt-1">
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-[#F0F4EE] text-[#487629] font-medium">Smart TV</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-[#F0F4EE] text-[#487629] font-medium">Pod Diskusi</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-[#F0F4EE] text-[#487629] font-medium">AC Sentral</span>
-                            </div>
-                        </div>
-                        <div class="pt-4 border-t border-[#E5E7E3] grid grid-cols-2 gap-2">
-                            <button type="button" onclick="scrollToSection('jadwal')" class="usu-btn-secondary py-2 text-xs text-center">
-                                Lihat Jadwal
-                            </button>
-                            <button type="button" onclick="openReservationModal('tgcl')" class="usu-btn-primary py-2 text-xs text-center">
-                                Reservasi
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Room 2: RUBELIN -->
-                <div class="usu-card overflow-hidden flex flex-col justify-between" id="room-card-rubelin">
-                    <div class="relative h-44 bg-[#EAECE8] overflow-hidden group">
-                        <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#487629]/15 to-[#31521F]/25 text-[#31521F]">
-                            <span class="material-symbols-outlined text-5xl mb-1 text-[#487629]">chair_alt</span>
-                            <span class="text-xs font-bold uppercase tracking-wider text-[#31521F]">Ruang Belajar Mandiri</span>
-                        </div>
-                        <div class="absolute top-3 right-3">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-white text-[#15803D] shadow-sm border border-[#DCFCE7]">
-                                <span class="w-2 h-2 rounded-full status-dot-tersedia"></span>
-                                <span>Tersedia (18 Slot)</span>
-                            </span>
-                        </div>
-                        <div class="absolute bottom-3 left-3 bg-[#172019]/80 backdrop-blur-xs text-white text-[11px] px-2.5 py-0.5 rounded-md font-medium">
-                            Lantai 2 • 24 Cubicle Mandiri
-                        </div>
-                    </div>
-                    <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
-                        <div class="space-y-2">
-                            <h3 class="text-base font-bold text-[#172019]">Ruang Belajar Mandiri (RUBELIN)</h3>
-                            <p class="text-xs text-[#5F685F] leading-relaxed">
-                                Ruang belajar pribadi tenang dengan bilik partisi individu, stopkontak, dan lampu baca untuk fokus belajar.
-                            </p>
-                            <div class="flex flex-wrap gap-1.5 pt-1">
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-[#F0F4EE] text-[#487629] font-medium">Quiet Zone</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-[#F0F4EE] text-[#487629] font-medium">Stopkontak Tiap Meja</span>
-                            </div>
-                        </div>
-                        <div class="pt-4 border-t border-[#E5E7E3] grid grid-cols-2 gap-2">
-                            <button type="button" onclick="scrollToSection('jadwal')" class="usu-btn-secondary py-2 text-xs text-center">
-                                Cek Slot
-                            </button>
-                            <button type="button" onclick="openReservationModal('rubelin')" class="usu-btn-primary py-2 text-xs text-center">
-                                Reservasi
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Room 3: Ruang Rapat / Diskusi 1 -->
-                <div class="usu-card overflow-hidden flex flex-col justify-between" id="room-card-rapat-1">
-                    <div class="relative h-44 bg-[#EAECE8] overflow-hidden group">
-                        <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#487629]/15 to-[#31521F]/25 text-[#31521F]">
-                            <span class="material-symbols-outlined text-5xl mb-1 text-[#487629]">meeting_room</span>
-                            <span class="text-xs font-bold uppercase tracking-wider text-[#31521F]">Ruang Rapat 1</span>
-                        </div>
-                        <div class="absolute top-3 right-3">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-white text-[#DC2626] shadow-sm border border-[#FEE2E2]">
-                                <span class="w-2 h-2 rounded-full status-dot-terpakai"></span>
-                                <span>Terpakai (sd 15.00)</span>
-                            </span>
-                        </div>
-                        <div class="absolute bottom-3 left-3 bg-[#172019]/80 backdrop-blur-xs text-white text-[11px] px-2.5 py-0.5 rounded-md font-medium">
-                            Lantai 2 • Kapasitas 12 Orang
-                        </div>
-                    </div>
-                    <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
-                        <div class="space-y-2">
-                            <h3 class="text-base font-bold text-[#172019]">Ruang Rapat / Diskusi 1</h3>
-                            <p class="text-xs text-[#5F685F] leading-relaxed">
-                                Ruang rapat kedap suara untuk bimbingan skripsi, rapat organisasi mahasiswa, dan riset kelompok.
-                            </p>
-                            <div class="flex flex-wrap gap-1.5 pt-1">
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-[#F0F4EE] text-[#487629] font-medium">Whiteboard</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-[#F0F4EE] text-[#487629] font-medium">Proyektor</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-[#F0F4EE] text-[#487629] font-medium">Sound</span>
-                            </div>
-                        </div>
-                        <div class="pt-4 border-t border-[#E5E7E3] grid grid-cols-2 gap-2">
-                            <button type="button" onclick="scrollToSection('jadwal')" class="usu-btn-secondary py-2 text-xs text-center">
-                                Lihat Jadwal
-                            </button>
-                            <button type="button" onclick="openReservationModal('rapat-1')" class="usu-btn-primary py-2 text-xs text-center">
-                                Reservasi
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Room 4: Ruang Konferensi -->
-                <div class="usu-card overflow-hidden flex flex-col justify-between" id="room-card-konferensi">
-                    <div class="relative h-44 bg-[#EAECE8] overflow-hidden group">
-                        <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#487629]/15 to-[#31521F]/25 text-[#31521F]">
-                            <span class="material-symbols-outlined text-5xl mb-1 text-[#487629]">podium</span>
-                            <span class="text-xs font-bold uppercase tracking-wider text-[#31521F]">Ruang Konferensi</span>
-                        </div>
-                        <div class="absolute top-3 right-3">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-white text-[#B45309] shadow-sm border border-[#FEF3C7]">
-                                <span class="w-2 h-2 rounded-full status-dot-menunggu"></span>
-                                <span>Menunggu Review</span>
-                            </span>
-                        </div>
-                        <div class="absolute bottom-3 left-3 bg-[#172019]/80 backdrop-blur-xs text-white text-[11px] px-2.5 py-0.5 rounded-md font-medium">
-                            Lantai 3 • Kapasitas 80 Orang
-                        </div>
-                    </div>
-                    <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
-                        <div class="space-y-2">
-                            <h3 class="text-base font-bold text-[#172019]">Ruang Konferensi</h3>
-                            <p class="text-xs text-[#5F685F] leading-relaxed">
-                                Ruang seminar dan kuliah umum skala besar dengan panggung mini, sound system terintegrasi, dan dual proyektor.
-                            </p>
-                            <div class="flex flex-wrap gap-1.5 pt-1">
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-[#F0F4EE] text-[#487629] font-medium">Dual Proyektor</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded bg-[#F0F4EE] text-[#487629] font-medium">Mic Wireless</span>
-                            </div>
-                        </div>
-                        <div class="pt-4 border-t border-[#E5E7E3] grid grid-cols-2 gap-2">
-                            <button type="button" onclick="scrollToSection('jadwal')" class="usu-btn-secondary py-2 text-xs text-center">
-                                Lihat Jadwal
-                            </button>
-                            <button type="button" onclick="openReservationModal('konferensi')" class="usu-btn-primary py-2 text-xs text-center">
-                                Reservasi
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- SECTION 5: ROOM TIMELINE / JADWAL RUANGAN HARI INI -->
-        <section id="jadwal" class="space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E5E7E3] pb-4">
-                <div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-[#172019] tracking-tight">Jadwal Penggunaan Ruangan Hari Ini</h2>
-                    <p class="text-xs sm:text-sm text-[#5F685F]">Visualisasi timeline ketersediaan ruangan real-time Perpustakaan USU.</p>
-                </div>
-                <div class="flex items-center gap-3 text-xs">
-                    <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-[#5CB733]"></span> Tersedia</span>
-                    <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-[#DC2626]"></span> Terpakai</span>
-                    <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-[#F6AE01]"></span> Menunggu</span>
-                    <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-[#8A928A]"></span> Tutup</span>
-                </div>
-            </div>
-
-            <!-- Timeline Grid Table -->
-            <div class="usu-card p-6 overflow-x-auto shadow-xs">
-                <div class="min-w-[760px] space-y-4">
+                <!-- SLIDE 1: LAYANAN LURING -->
+                <div class="w-full shrink-0 h-full relative flex flex-col justify-end p-6 sm:p-10 md:p-12 text-white select-none">
+                    <img src="{{ asset('images/layanan/luring.jpg') }}" alt="Layanan Luring Perpustakaan USU" class="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover/slider:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#022513] via-[#022513]/70 to-black/20 pointer-events-none"></div>
                     
-                    <!-- Timeline Header (Hours 08.00 - 17.00) -->
-                    <div class="grid grid-cols-12 gap-1 text-xs font-semibold text-[#5F685F] pb-2 border-b border-[#E5E7E3]">
-                        <div class="col-span-3 text-[#172019]">Ruangan & Lokasi</div>
-                        <div class="text-center">08.00</div>
-                        <div class="text-center">09.00</div>
-                        <div class="text-center">10.00</div>
-                        <div class="text-center">11.00</div>
-                        <div class="text-center">12.00</div>
-                        <div class="text-center">13.00</div>
-                        <div class="text-center">14.00</div>
-                        <div class="text-center">15.00</div>
-                        <div class="text-center">16.00</div>
-                    </div>
+                    <!-- Clickable overlay linking directly to Layanan Luring -->
+                    <a href="{{ route('layanan.luring') }}" class="absolute inset-0 z-10" aria-label="Buka Halaman Layanan Luring"></a>
 
-                    <!-- Row 1: The Gade Creative Lounge -->
-                    <div class="grid grid-cols-12 gap-1 items-center text-xs py-1.5 hover:bg-[#F7F8F6] rounded-lg px-1 transition-colors">
-                        <div class="col-span-3 font-semibold text-[#172019] flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm text-[#487629]">groups</span>
-                            <span>The Gade (TGCL)</span>
+                    <div class="relative z-20 space-y-2.5 max-w-2xl pointer-events-none">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0B6839] text-[#F6AE01] text-xs font-bold border border-[#F6AE01]/40 shadow-sm pointer-events-auto">
+                            <span class="material-symbols-outlined text-sm">storefront</span>
+                            <span>Layanan Luring (Onsite)</span>
                         </div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="08.00-09.00: Tersedia">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="09.00-10.00: Tersedia">✓</div>
-                        <div class="h-8 rounded bg-[#DC2626] text-white flex items-center justify-center font-bold text-[10px]" title="10.00-11.00: Diskusi FKG">Terpakai</div>
-                        <div class="h-8 rounded bg-[#DC2626] text-white flex items-center justify-center font-bold text-[10px]" title="11.00-12.00: Diskusi FKG">Terpakai</div>
-                        <div class="h-8 rounded bg-[#8A928A] text-white flex items-center justify-center text-[10px]" title="12.00-13.00: Ishoma">Istirahat</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="13.00-14.00: Tersedia">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="14.00-15.00: Tersedia">✓</div>
-                        <div class="h-8 rounded bg-[#F6AE01] text-[#172019] flex items-center justify-center font-bold text-[10px]" title="15.00-16.00: Menunggu Konfirmasi">Review</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="16.00-17.00: Tersedia">✓</div>
-                    </div>
-
-                    <!-- Row 2: RUBELIN -->
-                    <div class="grid grid-cols-12 gap-1 items-center text-xs py-1.5 hover:bg-[#F7F8F6] rounded-lg px-1 transition-colors">
-                        <div class="col-span-3 font-semibold text-[#172019] flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm text-[#487629]">chair_alt</span>
-                            <span>RUBELIN (Mandiri)</span>
+                        <h2 class="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md">
+                            Layanan Sirkulasi & Koleksi Buku Cetak
+                        </h2>
+                        <p class="text-xs sm:text-sm text-white/95 leading-relaxed max-w-xl drop-shadow-xs">
+                            Peminjaman, perpanjangan, pengembalian buku fisik, pembuatan KTM/kartu anggota, bimbingan literasi pemustaka, dan konsultasi referensi langsung di Gedung Perpustakaan USU.
+                        </p>
+                        <div class="pt-2 pointer-events-auto">
+                            <a href="{{ route('layanan.luring') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#F6AE01] to-[#F28800] text-[#074324] font-extrabold text-xs sm:text-sm shadow-lg hover:shadow-[#F6AE01]/40 hover:scale-105 transition-all">
+                                <span>Buka Layanan Luring</span>
+                                <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+                            </a>
                         </div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="Slot bebas">18 Slot</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="Slot bebas">16 Slot</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="Slot bebas">12 Slot</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="Slot bebas">8 Slot</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="Slot bebas">10 Slot</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="Slot bebas">14 Slot</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="Slot bebas">15 Slot</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="Slot bebas">19 Slot</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]" title="Slot bebas">22 Slot</div>
                     </div>
-
-                    <!-- Row 3: Ruang Rapat 1 -->
-                    <div class="grid grid-cols-12 gap-1 items-center text-xs py-1.5 hover:bg-[#F7F8F6] rounded-lg px-1 transition-colors">
-                        <div class="col-span-3 font-semibold text-[#172019] flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm text-[#487629]">meeting_room</span>
-                            <span>Ruang Rapat 1</span>
-                        </div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#DC2626] text-white flex items-center justify-center font-bold text-[10px]">Terpakai</div>
-                        <div class="h-8 rounded bg-[#DC2626] text-white flex items-center justify-center font-bold text-[10px]">Terpakai</div>
-                        <div class="h-8 rounded bg-[#DC2626] text-white flex items-center justify-center font-bold text-[10px]">Terpakai</div>
-                        <div class="h-8 rounded bg-[#DC2626] text-white flex items-center justify-center font-bold text-[10px]">Terpakai</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                    </div>
-
-                    <!-- Row 4: Ruang Rapat 2 -->
-                    <div class="grid grid-cols-12 gap-1 items-center text-xs py-1.5 hover:bg-[#F7F8F6] rounded-lg px-1 transition-colors">
-                        <div class="col-span-3 font-semibold text-[#172019] flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm text-[#487629]">meeting_room</span>
-                            <span>Ruang Rapat 2</span>
-                        </div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#F6AE01] text-[#172019] flex items-center justify-center font-bold text-[10px]">Review</div>
-                        <div class="h-8 rounded bg-[#F6AE01] text-[#172019] flex items-center justify-center font-bold text-[10px]">Review</div>
-                        <div class="h-8 rounded bg-[#8A928A] text-white flex items-center justify-center text-[10px]">Istirahat</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                    </div>
-
-                    <!-- Row 5: Ruang Konferensi -->
-                    <div class="grid grid-cols-12 gap-1 items-center text-xs py-1.5 hover:bg-[#F7F8F6] rounded-lg px-1 transition-colors">
-                        <div class="col-span-3 font-semibold text-[#172019] flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm text-[#487629]">podium</span>
-                            <span>Ruang Konferensi</span>
-                        </div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#8A928A] text-white flex items-center justify-center text-[10px]">Istirahat</div>
-                        <div class="h-8 rounded bg-[#F6AE01] text-[#172019] flex items-center justify-center font-bold text-[10px]">Review</div>
-                        <div class="h-8 rounded bg-[#F6AE01] text-[#172019] flex items-center justify-center font-bold text-[10px]">Review</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                        <div class="h-8 rounded bg-[#5CB733] text-white flex items-center justify-center font-bold text-[10px]">✓</div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 6: JAM LAYANAN PERPUSTAKAAN -->
-        <section id="jam-layanan" class="usu-card p-6 sm:p-8 bg-white border border-[#E5E7E3]">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div class="space-y-1">
-                    <h2 class="text-lg sm:text-xl font-bold text-[#172019] flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[#487629]">schedule</span>
-                        <span>Jam Layanan Perpustakaan</span>
-                    </h2>
-                    <p class="text-xs sm:text-sm text-[#5F685F]">Jadwal operasional layanan sirkulasi, referensi, dan area belajar.</p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <!-- SLIDE 2: LAYANAN DARING -->
+                <div class="w-full shrink-0 h-full relative flex flex-col justify-end p-6 sm:p-10 md:p-12 text-white select-none">
+                    <img src="{{ asset('images/layanan/daring.jpg') }}" alt="Layanan Daring Perpustakaan USU" class="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover/slider:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#022513] via-[#022513]/70 to-black/20 pointer-events-none"></div>
                     
-                    <div class="p-3.5 rounded-xl bg-[#F7F8F6] border border-[#E5E7E3] flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-[#F0F4EE] text-[#487629] flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-lg">calendar_month</span>
-                        </div>
-                        <div>
-                            <span class="text-xs font-semibold text-[#172019] block">Senin – Kamis</span>
-                            <span class="text-xs text-[#5F685F]">08.00 – 20.00 WIB</span>
-                        </div>
-                    </div>
+                    <!-- Clickable overlay linking directly to Layanan Daring -->
+                    <a href="{{ route('layanan.daring') }}" class="absolute inset-0 z-10" aria-label="Buka Halaman Layanan Daring"></a>
 
-                    <div class="p-3.5 rounded-xl bg-[#F7F8F6] border border-[#E5E7E3] flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-[#F0F4EE] text-[#487629] flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-lg">event_available</span>
+                    <div class="relative z-20 space-y-2.5 max-w-2xl pointer-events-none">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#15803D] text-white text-xs font-bold border border-white/30 shadow-sm pointer-events-auto">
+                            <span class="material-symbols-outlined text-sm">cloud_sync</span>
+                            <span>Layanan Daring (Online)</span>
                         </div>
-                        <div>
-                            <span class="text-xs font-semibold text-[#172019] block">Jumat</span>
-                            <span class="text-xs text-[#5F685F]">08.00 – 17.00 WIB</span>
+                        <h2 class="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md">
+                            Portal Digital, E-Journal & SKBP Online
+                        </h2>
+                        <p class="text-xs sm:text-sm text-white/95 leading-relaxed max-w-xl drop-shadow-xs">
+                            Pengurusan Surat Keterangan Bebas Pustaka (SKBP) mandiri wisuda, uji kemiripan dokumen Turnitin, akses pangkalan data jurnal ilmiah terindeks Scopus & ScienceDirect 24/7.
+                        </p>
+                        <div class="pt-2 pointer-events-auto">
+                            <a href="{{ route('layanan.daring') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#F6AE01] to-[#F28800] text-[#074324] font-extrabold text-xs sm:text-sm shadow-lg hover:shadow-[#F6AE01]/40 hover:scale-105 transition-all">
+                                <span>Buka Layanan Daring</span>
+                                <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+                            </a>
                         </div>
-                    </div>
-
-                    <div class="p-3.5 rounded-xl bg-[#F0FDF4] border border-[#DCFCE7] flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-[#DCFCE7] text-[#15803D] flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-lg">public</span>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-[#15803D] block">Akses Online</span>
-                            <span class="text-xs text-[#15803D]/80">24 Jam / 7 Hari</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 7: BANTUAN & KONTAK -->
-        <section class="p-8 sm:p-10 rounded-2xl bg-[#31521F] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
-            <div class="space-y-2 text-center md:text-left">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-[#F6AE01] text-xs font-bold uppercase tracking-wider">
-                    <span class="material-symbols-outlined text-sm">help</span> Bantuan Pemustaka
-                </div>
-                <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                    Tidak menemukan layanan yang kamu cari?
-                </h3>
-                <p class="text-xs sm:text-sm text-[#E5E7E3] max-w-xl">
-                    Temukan panduan penelusuran, informasi syarat bebas pustaka, atau hubungi pustakawan kami untuk bantuan langsung.
-                </p>
-            </div>
-            <div class="flex flex-wrap items-center justify-center gap-3 shrink-0">
-                <button type="button" onclick="setCategoryFilter('semua'); scrollToSection('layanan')" class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-semibold text-xs transition-colors border border-white/20">
-                    Lihat Semua Layanan
-                </button>
-                <button type="button" onclick="openWhatsAppHelpdesk()" class="px-5 py-2.5 rounded-xl bg-[#F6AE01] hover:bg-[#F28800] text-[#31521F] font-bold text-xs transition-all shadow-sm flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-base">chat</span>
-                    <span>Hubungi Perpustakaan</span>
-                </button>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Professional University Footer -->
-    <footer class="bg-[#FFFFFF] border-t border-[#E5E7E3] text-[#5F685F] text-xs mt-16">
-        <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-[#E5E7E3]">
-                
-                <!-- Col 1: Identity & Address -->
-                <div class="md:col-span-5 space-y-3">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-lg bg-[#487629] text-white flex items-center justify-center">
-                            <span class="material-symbols-outlined text-lg text-[#F6AE01]">local_library</span>
-                        </div>
-                        <span class="text-base font-bold text-[#172019]">Perpustakaan Universitas Sumatera Utara</span>
-                    </div>
-                    <p class="text-xs leading-relaxed text-[#5F685F]">
-                        Jalan Perpustakaan No. 1, Kampus USU, Padang Bulan,<br>
-                        Medan, Sumatera Utara, 20155, Indonesia.
-                    </p>
-                    <div class="flex items-center gap-4 text-xs font-medium text-[#172019] pt-1">
-                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm text-[#487629]">mail</span> libraryp@usu.ac.id</span>
-                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm text-[#487629]">call</span> (061) 8218666</span>
                     </div>
                 </div>
 
-                <!-- Col 2: Layanan -->
-                <div class="md:col-span-3 space-y-2.5">
-                    <span class="text-xs font-bold uppercase tracking-wider text-[#172019] block">Layanan & Akses</span>
-                    <ul class="space-y-1.5">
-                        <li><a href="#layanan" onclick="setCategoryFilter('luring')" class="hover:text-[#487629] transition-colors">Layanan Sirkulasi & Fisik</a></li>
-                        <li><a href="#layanan" onclick="setCategoryFilter('daring')" class="hover:text-[#487629] transition-colors">Uji Turnitin & Repositori</a></li>
-                        <li><a href="#fasilitas" class="hover:text-[#487629] transition-colors">Peminjaman Ruangan</a></li>
-                        <li><a href="https://repositori.usu.ac.id" target="_blank" class="hover:text-[#487629] transition-colors">Repositori Institusi USU</a></li>
-                    </ul>
+                <!-- SLIDE 3: LAYANAN AREA BELAJAR -->
+                <div class="w-full shrink-0 h-full relative flex flex-col justify-end p-6 sm:p-10 md:p-12 text-white select-none">
+                    <img src="{{ asset('images/layanan/area-belajar.jpg') }}" alt="Layanan Area Belajar Perpustakaan USU" class="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover/slider:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#022513] via-[#022513]/70 to-black/20 pointer-events-none"></div>
+                    
+                    <!-- Clickable overlay linking directly to Layanan Area Belajar -->
+                    <a href="{{ route('layanan.area-belajar') }}" class="absolute inset-0 z-10" aria-label="Buka Halaman Layanan Area Belajar"></a>
+
+                    <div class="relative z-20 space-y-2.5 max-w-2xl pointer-events-none">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EB680D] text-white text-xs font-bold border border-white/30 shadow-sm pointer-events-auto">
+                            <span class="material-symbols-outlined text-sm">meeting_room</span>
+                            <span>Layanan Area Belajar & Ruangan</span>
+                        </div>
+                        <h2 class="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md">
+                            The Gade Creative Lounge & Ruang Kolaborasi
+                        </h2>
+                        <p class="text-xs sm:text-sm text-white/95 leading-relaxed max-w-xl drop-shadow-xs">
+                            Coworking space modern TGCL Lantai 1, kubikel fokus individu RUBELIN kedap suara, dan ruang rapat resmi berkapasitas 6 hingga 18 orang dengan sistem booking online.
+                        </p>
+                        <div class="pt-2 flex flex-wrap items-center gap-3 pointer-events-auto">
+                            <a href="{{ route('layanan.area-belajar') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#F6AE01] to-[#F28800] text-[#074324] font-extrabold text-xs sm:text-sm shadow-lg hover:shadow-[#F6AE01]/40 hover:scale-105 transition-all">
+                                <span>Buka Fasilitas Area Belajar</span>
+                                <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+                            </a>
+                            <a href="{{ route('jadwal.ruangan') }}" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/20 backdrop-blur-md text-white font-bold text-xs hover:bg-white/30 transition-all border border-white/30">
+                                <span class="material-symbols-outlined text-sm">calendar_month</span>
+                                <span>Lihat Jadwal Ruangan</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Col 3: Informasi & Tautan Resmi -->
-                <div class="md:col-span-4 space-y-2.5">
-                    <span class="text-xs font-bold uppercase tracking-wider text-[#172019] block">Portal Resmi USU</span>
-                    <ul class="space-y-1.5">
-                        <li><a href="https://usu.ac.id" target="_blank" class="hover:text-[#487629] transition-colors">Universitas Sumatera Utara (USU)</a></li>
-                        <li><a href="https://library.usu.ac.id/id" target="_blank" class="hover:text-[#487629] transition-colors">Portal Utama Perpustakaan</a></li>
-                        <li><a href="https://digilib.usu.ac.id" target="_blank" class="hover:text-[#487629] transition-colors">Katalog Digital (DIGILIB OPAC)</a></li>
-                        <li><a href="https://resourceguide.usu.ac.id" target="_blank" class="hover:text-[#487629] transition-colors">USU Resource Guide</a></li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#8A928A]">
-                <p>&copy; 2026 Perpustakaan Universitas Sumatera Utara. Seluruh hak cipta dilindungi.</p>
-                <p class="flex items-center gap-1 font-medium text-[#5F685F]">
-                    <span>USU Library Digital Service Hub</span>
-                </p>
             </div>
         </div>
-    </footer>
 
-    <!-- ========================================================================= -->
-    <!-- SERVICE DETAIL MODAL                                                      -->
-    <!-- ========================================================================= -->
-    <div id="service-modal" class="fixed inset-0 z-50 bg-[#172019]/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-7 shadow-xl border border-[#E5E7E3] space-y-5 animate-in fade-in zoom-in duration-150">
-            <div class="flex items-start justify-between gap-3 border-b border-[#E5E7E3] pb-4">
-                <div class="flex items-center gap-3">
-                    <div id="modal-icon-bg" class="w-11 h-11 rounded-xl bg-[#F0F4EE] text-[#487629] flex items-center justify-center shrink-0">
-                        <span id="modal-icon" class="material-symbols-outlined text-2xl">description</span>
-                    </div>
-                    <div>
-                        <span id="modal-badge" class="badge-online text-[10px] font-semibold px-2 py-0.5 rounded-md inline-block mb-1">Layanan Daring</span>
-                        <h3 id="modal-title" class="text-lg font-bold text-[#172019] leading-snug">Nama Layanan</h3>
-                    </div>
+        <!-- Navigation Arrows (Previous / Next) -->
+        <button type="button" onclick="prevLayananSlide()" aria-label="Slide Sebelumnya" class="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/50 hover:bg-[#0B6839] text-white backdrop-blur-md border border-white/25 flex items-center justify-center transition-all hover:scale-110 shadow-lg cursor-pointer">
+            <span class="material-symbols-outlined text-2xl">chevron_left</span>
+        </button>
+        <button type="button" onclick="nextLayananSlide()" aria-label="Slide Selanjutnya" class="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/50 hover:bg-[#0B6839] text-white backdrop-blur-md border border-white/25 flex items-center justify-center transition-all hover:scale-110 shadow-lg cursor-pointer">
+            <span class="material-symbols-outlined text-2xl">chevron_right</span>
+        </button>
+
+        <!-- Interactive Slide Indicator Tabs (3 Services) -->
+        <div class="bg-white/95 border-t border-[#D6EADF] p-2 sm:p-3 grid grid-cols-3 gap-2 z-20 relative">
+            <button type="button" onclick="goToLayananSlide(0)" class="slider-tab-btn flex items-center gap-2 p-2 sm:p-2.5 rounded-xl text-left transition-all border border-[#0B6839] bg-[#F0FDF4] shadow-xs cursor-pointer" data-slide="0">
+                <div class="w-8 h-8 rounded-lg bg-[#F0FDF4] text-[#0B6839] flex items-center justify-center shrink-0 border border-[#C2E4CD]">
+                    <span class="material-symbols-outlined text-base">storefront</span>
                 </div>
-                <button type="button" onclick="closeServiceModal()" class="text-[#8A928A] hover:text-[#172019] p-1 rounded-lg hover:bg-[#F7F8F6]">
-                    <span class="material-symbols-outlined text-2xl">close</span>
-                </button>
+                <div class="min-w-0 hidden sm:block">
+                    <span class="text-xs font-bold text-[#074324] block truncate">1. Layanan Luring</span>
+                    <span class="text-[10px] text-[#64748B] block truncate">Sirkulasi & Koleksi Buku</span>
+                </div>
+                <span class="text-xs font-bold text-[#074324] sm:hidden">Luring</span>
+            </button>
+
+            <button type="button" onclick="goToLayananSlide(1)" class="slider-tab-btn flex items-center gap-2 p-2 sm:p-2.5 rounded-xl text-left transition-all border border-transparent hover:bg-[#F0FDF4] cursor-pointer" data-slide="1">
+                <div class="w-8 h-8 rounded-lg bg-[#F0FDF4] text-[#15803D] flex items-center justify-center shrink-0 border border-[#C2E4CD]">
+                    <span class="material-symbols-outlined text-base">cloud_sync</span>
+                </div>
+                <div class="min-w-0 hidden sm:block">
+                    <span class="text-xs font-bold text-[#074324] block truncate">2. Layanan Daring</span>
+                    <span class="text-[10px] text-[#64748B] block truncate">SKBP & E-Journal Online</span>
+                </div>
+                <span class="text-xs font-bold text-[#074324] sm:hidden">Daring</span>
+            </button>
+
+            <button type="button" onclick="goToLayananSlide(2)" class="slider-tab-btn flex items-center gap-2 p-2 sm:p-2.5 rounded-xl text-left transition-all border border-transparent hover:bg-[#FFFBEB] cursor-pointer" data-slide="2">
+                <div class="w-8 h-8 rounded-lg bg-[#FFFBEB] text-[#B45309] flex items-center justify-center shrink-0 border border-[#FEF3C7]">
+                    <span class="material-symbols-outlined text-base">meeting_room</span>
+                </div>
+                <div class="min-w-0 hidden sm:block">
+                    <span class="text-xs font-bold text-[#074324] block truncate">3. Area Belajar</span>
+                    <span class="text-[10px] text-[#64748B] block truncate">TGCL & Ruang Rapat</span>
+                </div>
+                <span class="text-xs font-bold text-[#074324] sm:hidden">Ruang</span>
+            </button>
+        </div>
+
+    </div>
+</section>
+
+
+
+<!-- JAM LAYANAN RESMI PERPUSTAKAAN USU -->
+<section id="jam-layanan" class="usu-card p-6 sm:p-8 bg-gradient-to-b from-[#F2F8F4] via-white to-[#F0FDF4] border-2 border-[#C2E4CD] shadow-sm space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#D6EADF] pb-5">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="w-1.5 h-4 rounded-full bg-[#F6AE01]"></span>
+                <span class="text-xs font-bold uppercase tracking-wider text-[#0B6839]">Jadwal Operasional Resmi</span>
             </div>
-
-            <div class="space-y-4 text-xs sm:text-sm text-[#5F685F]">
-                <div>
-                    <h4 class="font-bold text-[#172019] text-xs uppercase tracking-wider mb-1">Deskripsi Layanan</h4>
-                    <p id="modal-desc" class="leading-relaxed">Deskripsi lengkap mengenai layanan perpustakaan ini.</p>
-                </div>
-
-                <div class="bg-[#F7F8F6] p-3.5 rounded-xl border border-[#E5E7E3] space-y-1.5">
-                    <h4 class="font-bold text-[#172019] text-xs flex items-center gap-1.5">
-                        <span class="material-symbols-outlined text-sm text-[#487629]">fact_check</span>
-                        <span>Syarat & Berkas yang Diperlukan:</span>
-                    </h4>
-                    <ul id="modal-requirements" class="list-disc list-inside text-xs space-y-1 text-[#5F685F]">
-                        <!-- Populated by JS -->
-                    </ul>
-                </div>
-
-                <div class="space-y-1.5">
-                    <h4 class="font-bold text-[#172019] text-xs flex items-center gap-1.5">
-                        <span class="material-symbols-outlined text-sm text-[#487629]">timeline</span>
-                        <span>Alur Proses:</span>
-                    </h4>
-                    <p id="modal-steps" class="text-xs leading-relaxed text-[#5F685F]"></p>
-                </div>
-            </div>
-
-            <div class="pt-4 border-t border-[#E5E7E3] flex items-center justify-end gap-3">
-                <button type="button" onclick="closeServiceModal()" class="usu-btn-secondary px-4 py-2 text-xs">
-                    Tutup
-                </button>
-                <a id="modal-action-btn" href="#" target="_blank" class="usu-btn-primary px-5 py-2 text-xs inline-flex items-center gap-1.5">
-                    <span>Lanjutkan ke Layanan</span>
-                    <span class="material-symbols-outlined text-sm">open_in_new</span>
-                </a>
-            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-[#074324]">Jam Layanan Perpustakaan USU</h2>
+            <p class="text-xs sm:text-sm text-[#64748B] mt-1">Jadwal resmi pelayanan sirkulasi, ruang baca, dan akses digital Gedung Perpustakaan Universitas (Kampus Padang Bulan).</p>
+        </div>
+        <div class="shrink-0">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#0B6839] text-white shadow-xs">
+                <span class="w-2 h-2 rounded-full bg-[#F6AE01] animate-pulse"></span>
+                <span>Terbuka untuk Sivitas USU</span>
+            </span>
         </div>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- ROOM RESERVATION WORKFLOW MODAL                                           -->
-    <!-- ========================================================================= -->
-    <div id="reservation-modal" class="fixed inset-0 z-50 bg-[#172019]/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-7 shadow-xl border border-[#E5E7E3] space-y-5 animate-in fade-in zoom-in duration-150">
-            <div class="flex items-start justify-between border-b border-[#E5E7E3] pb-4">
-                <div>
-                    <span class="text-[10px] font-bold text-[#487629] uppercase tracking-wider">Formulir Reservasi</span>
-                    <h3 id="res-modal-room-title" class="text-lg font-bold text-[#172019]">Reservasi Ruangan</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs sm:text-sm">
+        
+        <!-- Senin -->
+        <div class="p-4 rounded-xl bg-white border border-[#D6EADF] shadow-xs flex items-center justify-between gap-3 hover:border-[#0B6839] transition-all">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#0B6839] flex items-center justify-center border border-[#C2E4CD] shadow-xs shrink-0">
+                    <span class="material-symbols-outlined text-xl">calendar_today</span>
                 </div>
-                <button type="button" onclick="closeReservationModal()" class="text-[#8A928A] hover:text-[#172019] p-1 rounded-lg hover:bg-[#F7F8F6]">
-                    <span class="material-symbols-outlined text-2xl">close</span>
-                </button>
+                <div class="min-w-0">
+                    <span class="font-bold text-[#074324] block">Senin</span>
+                    <span class="text-[11px] text-[#64748B] block truncate">Pelayanan Penuh</span>
+                </div>
             </div>
-
-            <!-- 3-Step Form -->
-            <form id="reservation-form" onsubmit="handleReservationSubmit(event)" class="space-y-4 text-xs sm:text-sm">
-                <div>
-                    <label class="block text-xs font-bold text-[#172019] mb-1">Pilih Ruangan</label>
-                    <select id="res-room-select" class="w-full p-2.5 rounded-lg border border-[#E5E7E3] bg-[#F7F8F6] text-xs font-medium text-[#172019] outline-none focus:border-[#487629]">
-                        <option value="tgcl">The Gade Creative Lounge (Lantai 1)</option>
-                        <option value="rubelin">Ruang Belajar Mandiri - RUBELIN (Lantai 2)</option>
-                        <option value="rapat-1">Ruang Rapat 1 (Lantai 2)</option>
-                        <option value="konferensi">Ruang Konferensi (Lantai 3)</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-[#172019] mb-1">Tanggal</label>
-                        <input type="date" id="res-date" required class="w-full p-2.5 rounded-lg border border-[#E5E7E3] bg-[#F7F8F6] text-xs text-[#172019] outline-none focus:border-[#487629]" value="2026-08-27">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-[#172019] mb-1">Sesi Waktu</label>
-                        <select id="res-time-slot" class="w-full p-2.5 rounded-lg border border-[#E5E7E3] bg-[#F7F8F6] text-xs font-medium text-[#172019] outline-none focus:border-[#487629]">
-                            <option value="08:00 - 10:00">08.00 – 10.00 WIB</option>
-                            <option value="10:00 - 12:00">10.00 – 12.00 WIB</option>
-                            <option value="13:00 - 15:00">13.00 – 15.00 WIB</option>
-                            <option value="15:00 - 17:00">15.00 – 17.00 WIB</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-[#172019] mb-1">NIM / NIP</label>
-                        <input type="text" id="res-nim" placeholder="Contoh: 211402001" required class="w-full p-2.5 rounded-lg border border-[#E5E7E3] bg-[#F7F8F6] text-xs text-[#172019] outline-none focus:border-[#487629]">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-[#172019] mb-1">Nama Lengkap</label>
-                        <input type="text" id="res-name" placeholder="Nama pemohon" required class="w-full p-2.5 rounded-lg border border-[#E5E7E3] bg-[#F7F8F6] text-xs text-[#172019] outline-none focus:border-[#487629]">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-[#172019] mb-1">Keperluan / Agenda</label>
-                    <textarea id="res-purpose" rows="2" placeholder="Contoh: Diskusi tugas akhir kelompok / Bimbingan riset" required class="w-full p-2.5 rounded-lg border border-[#E5E7E3] bg-[#F7F8F6] text-xs text-[#172019] outline-none focus:border-[#487629]"></textarea>
-                </div>
-
-                <div class="pt-3 border-t border-[#E5E7E3] flex items-center justify-between">
-                    <span class="text-[11px] text-[#8A928A]">Persetujuan instan untuk akun aktif</span>
-                    <button type="submit" class="usu-btn-primary px-5 py-2 text-xs">
-                        Kirim Reservasi
-                    </button>
-                </div>
-            </form>
-
-            <!-- Success State Message (hidden initially) -->
-            <div id="reservation-success" class="hidden text-center py-4 space-y-3">
-                <div class="w-12 h-12 rounded-full bg-[#F0FDF4] text-[#15803D] flex items-center justify-center mx-auto">
-                    <span class="material-symbols-outlined text-3xl">check_circle</span>
-                </div>
-                <h4 class="text-base font-bold text-[#172019]">Reservasi Berhasil Diajukan!</h4>
-                <p class="text-xs text-[#5F685F] max-w-xs mx-auto">
-                    Kode reservasi Anda: <strong id="res-code" class="text-[#487629] font-mono font-bold">USU-RES-8821</strong>.<br>
-                    Status dan verifikasi slot telah dikirimkan ke email sivitas Anda.
-                </p>
-                <button type="button" onclick="closeReservationModal()" class="usu-btn-secondary px-4 py-2 text-xs mt-2">
-                    Tutup
-                </button>
+            <div class="text-right shrink-0 whitespace-nowrap">
+                <span class="font-mono font-bold text-[#0B6839] text-xs sm:text-sm block">08.00 – 20.00 WIB</span>
+                <span class="block text-[10px] text-[#64748B]">Layanan Fisik</span>
             </div>
         </div>
+
+        <!-- Selasa - Kamis -->
+        <div class="p-4 rounded-xl bg-white border border-[#D6EADF] shadow-xs flex items-center justify-between gap-3 hover:border-[#0B6839] transition-all">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#0B6839] flex items-center justify-center border border-[#C2E4CD] shadow-xs shrink-0">
+                    <span class="material-symbols-outlined text-xl">date_range</span>
+                </div>
+                <div class="min-w-0">
+                    <span class="font-bold text-[#074324] block">Selasa – Kamis</span>
+                    <span class="text-[11px] text-[#64748B] block truncate">Pelayanan Penuh</span>
+                </div>
+            </div>
+            <div class="text-right shrink-0 whitespace-nowrap">
+                <span class="font-mono font-bold text-[#0B6839] text-xs sm:text-sm block">08.00 – 20.00 WIB</span>
+                <span class="block text-[10px] text-[#64748B]">Layanan Fisik</span>
+            </div>
+        </div>
+
+        <!-- Jumat -->
+        <div class="p-4 rounded-xl bg-white border border-[#D6EADF] shadow-xs flex items-center justify-between gap-3 hover:border-[#0B6839] transition-all">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#0B6839] flex items-center justify-center border border-[#C2E4CD] shadow-xs shrink-0">
+                    <span class="material-symbols-outlined text-xl">event_available</span>
+                </div>
+                <div class="min-w-0">
+                    <span class="font-bold text-[#074324] block">Jumat</span>
+                    <span class="text-[11px] text-[#64748B] block truncate">Jeda Shalat Jumat</span>
+                </div>
+            </div>
+            <div class="text-right shrink-0 whitespace-nowrap">
+                <span class="font-mono font-bold text-[#0B6839] text-xs sm:text-sm block">08.00 – 17.00 WIB</span>
+                <span class="block text-[10px] text-[#64748B]">Layanan Fisik</span>
+            </div>
+        </div>
+
+        <!-- Sabtu - Minggu -->
+        <div class="p-4 rounded-xl bg-[#FEF2F2] border border-[#FEE2E2] shadow-xs flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-white text-[#EF4444] flex items-center justify-center border border-[#FEE2E2] shadow-xs shrink-0">
+                    <span class="material-symbols-outlined text-xl">event_busy</span>
+                </div>
+                <div class="min-w-0">
+                    <span class="font-bold text-[#991B1B] block">Sabtu – Minggu</span>
+                    <span class="text-[11px] text-[#DC2626] block truncate">Hari Libur Akhir Pekan</span>
+                </div>
+            </div>
+            <div class="text-right shrink-0 whitespace-nowrap">
+                <span class="font-bold text-[#DC2626] text-xs sm:text-sm uppercase tracking-wider block">TUTUP</span>
+                <span class="block text-[10px] text-[#EF4444]">Layanan Fisik</span>
+            </div>
+        </div>
+
+        <!-- Ruang Baca Terbuka Lt. 1 -->
+        <div class="p-4 rounded-xl bg-[#F0FDF4] border border-[#C2E4CD] shadow-xs flex items-center justify-between gap-3 hover:border-[#0B6839] transition-all">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-[#0B6839] text-[#F6AE01] flex items-center justify-center shadow-xs shrink-0">
+                    <span class="material-symbols-outlined text-xl">chair</span>
+                </div>
+                <div class="min-w-0">
+                    <span class="font-bold text-[#074324] block">Ruang Baca Terbuka (Lt. 1)</span>
+                    <span class="text-[11px] text-[#0B6839] font-medium block truncate">Senin – Jumat</span>
+                </div>
+            </div>
+            <div class="text-right shrink-0 whitespace-nowrap">
+                <span class="font-mono font-bold text-[#074324] text-xs sm:text-sm block">08.00 – 21.00 WIB</span>
+                <span class="block text-[10px] text-[#0B6839] font-semibold">Bebas Belajar</span>
+            </div>
+        </div>
+
+        <!-- Akses Online 24/7 -->
+        <div class="p-4 rounded-xl bg-[#FFFBEB] border border-[#FEF3C7] shadow-xs flex items-center justify-between gap-3 hover:border-[#F6AE01] transition-all">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-[#F6AE01] text-[#074324] flex items-center justify-center shadow-xs shrink-0">
+                    <span class="material-symbols-outlined text-xl font-bold">public</span>
+                </div>
+                <div class="min-w-0">
+                    <span class="font-bold text-[#B45309] block">Akses Online Mandiri</span>
+                    <span class="text-[11px] text-[#78350F] block truncate">E-Journal, E-Book, Repositori</span>
+                </div>
+            </div>
+            <div class="text-right shrink-0 whitespace-nowrap">
+                <span class="font-bold text-[#B45309] text-xs sm:text-sm block">24 Jam / 7 Hari</span>
+                <span class="block text-[10px] text-[#78350F] font-semibold">Non-stop</span>
+            </div>
+        </div>
+
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- SIMPLE LOGIN / SSO MODAL                                                  -->
-    <!-- ========================================================================= -->
-    <div id="login-modal" class="fixed inset-0 z-50 bg-[#172019]/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-[#E5E7E3] space-y-4 animate-in fade-in zoom-in duration-150">
-            <div class="flex items-center justify-between border-b border-[#E5E7E3] pb-3">
-                <h3 class="text-base font-bold text-[#172019]">Masuk Akun USU Library Hub</h3>
-                <button type="button" onclick="closeLoginModal()" class="text-[#8A928A] hover:text-[#172019]">
-                    <span class="material-symbols-outlined text-xl">close</span>
-                </button>
+    <!-- Catatan Tata Tertib -->
+    <div class="p-4 rounded-xl bg-white border border-[#C2E4CD] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-[#64748B]">
+        <div class="flex items-center gap-2 text-[#074324] font-medium">
+            <span class="material-symbols-outlined text-base text-[#0B6839]">badge</span>
+            <span>Pengunjung wajib memindai Kartu Tanda Mahasiswa (KTM) / Kartu Anggota di pintu masuk lobi utama.</span>
+        </div>
+        <span class="text-[11px] text-[#0B6839] font-bold px-2.5 py-1 rounded-md bg-[#F0FDF4] border border-[#C2E4CD] shrink-0">Loker Penitipan Barang Tersedia</span>
+    </div>
+</section>
+
+<!-- PERPUSTAKAAN DALAM ANGKA (STATISTIK RESMI) -->
+<section class="space-y-4">
+    <div class="border-b border-[#D6EADF] pb-3">
+        <div class="flex items-center gap-2 mb-1">
+            <span class="w-1.5 h-4 rounded-full bg-[#F6AE01]"></span>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#0B6839]">Data Statistik Resmi</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-[#074324]">Perpustakaan Dalam Angka</h2>
+        <p class="text-xs sm:text-sm text-[#64748B]">Capaian layanan, koleksi, dan keterlibatan sivitas akademika Universitas Sumatera Utara.</p>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Stat 1: Anggota -->
+        <div class="usu-card p-5 bg-white border-t-4 border-[#0B6839] flex items-center justify-between gap-3 hover:border-[#0B6839] hover:shadow-md transition-all">
+            <div>
+                <span class="text-2xl sm:text-3xl font-extrabold text-[#074324] tracking-tight block">27.826</span>
+                <span class="text-xs font-bold text-[#0F172A] mt-0.5 block">Anggota Terdaftar</span>
+                <span class="text-[10px] text-[#0B6839] font-semibold mt-1 inline-flex items-center gap-0.5">
+                    <span class="material-symbols-outlined text-xs">verified</span> Mahasiswa & Dosen
+                </span>
             </div>
-            <p class="text-xs text-[#5F685F]">Gunakan akun SSO USU Single Sign-On untuk mengakses seluruh fitur peminjaman mandiri.</p>
+            <div class="w-12 h-12 rounded-2xl bg-[#F0FDF4] text-[#0B6839] border border-[#C2E4CD] flex items-center justify-center shrink-0 shadow-xs">
+                <span class="material-symbols-outlined text-2xl">group</span>
+            </div>
+        </div>
+
+        <!-- Stat 2: Peminjaman -->
+        <div class="usu-card p-5 bg-white border-t-4 border-[#F6AE01] flex items-center justify-between gap-3 hover:border-[#F6AE01] hover:shadow-md transition-all">
+            <div>
+                <span class="text-2xl sm:text-3xl font-extrabold text-[#B45309] tracking-tight block">3.055.147</span>
+                <span class="text-xs font-bold text-[#0F172A] mt-0.5 block">Jumlah Pinjaman</span>
+                <span class="text-[10px] text-[#B45309] font-semibold mt-1 inline-flex items-center gap-0.5">
+                    <span class="material-symbols-outlined text-xs">sync_alt</span> Sirkulasi Aktif
+                </span>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-[#FFFBEB] text-[#B45309] border border-[#FEF3C7] flex items-center justify-center shrink-0 shadow-xs">
+                <span class="material-symbols-outlined text-2xl">import_contacts</span>
+            </div>
+        </div>
+
+        <!-- Stat 3: Koleksi Buku -->
+        <div class="usu-card p-5 bg-white border-t-4 border-[#0B6839] flex items-center justify-between gap-3 hover:border-[#0B6839] hover:shadow-md transition-all">
+            <div>
+                <span class="text-2xl sm:text-3xl font-extrabold text-[#074324] tracking-tight block">150.615</span>
+                <span class="text-xs font-bold text-[#0F172A] mt-0.5 block">Penjajaran Koleksi</span>
+                <span class="text-[10px] text-[#0B6839] font-semibold mt-1 inline-flex items-center gap-0.5">
+                    <span class="material-symbols-outlined text-xs">shelves</span> Judul & Eksemplar
+                </span>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-[#F0FDF4] text-[#0B6839] border border-[#C2E4CD] flex items-center justify-center shrink-0 shadow-xs">
+                <span class="material-symbols-outlined text-2xl">menu_book</span>
+            </div>
+        </div>
+
+        <!-- Stat 4: Pengunjung -->
+        <div class="usu-card p-5 bg-white border-t-4 border-[#F6AE01] flex items-center justify-between gap-3 hover:border-[#F6AE01] hover:shadow-md transition-all">
+            <div>
+                <span class="text-2xl sm:text-3xl font-extrabold text-[#B45309] tracking-tight block">256.191</span>
+                <span class="text-xs font-bold text-[#0F172A] mt-0.5 block">Jumlah Pengunjung</span>
+                <span class="text-[10px] text-[#B45309] font-semibold mt-1 inline-flex items-center gap-0.5">
+                    <span class="material-symbols-outlined text-xs">trending_up</span> Kunjungan Fisik & Daring
+                </span>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-[#FFFBEB] text-[#B45309] border border-[#FEF3C7] flex items-center justify-center shrink-0 shadow-xs">
+                <span class="material-symbols-outlined text-2xl">sensor_occupied</span>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- PORTAL SISTEM INFORMASI & SUMBER DAYA ELEKTRONIK -->
+<section class="space-y-4">
+    <div class="border-b border-[#D6EADF] pb-3">
+        <div class="flex items-center gap-2 mb-1">
+            <span class="w-1.5 h-4 rounded-full bg-[#F6AE01]"></span>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#0B6839]">Sistem Informasi Terpadu</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-[#074324]">Portal & Sumber Daya Digital Perpustakaan</h2>
+        <p class="text-xs sm:text-sm text-[#64748B]">Akses katalog, pangkalan data jurnal ilmiah, repositori skripsi/tesis, dan panduan penelitian akademik.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <!-- 1. DIGILIB OPAC -->
+        <a href="https://digilib.usu.ac.id" target="_blank" class="usu-card p-6 flex flex-col justify-between hover:border-[#0B6839] group transition-all">
             <div class="space-y-3">
-                <button type="button" onclick="simulateLogin('Mahasiswa USU')" class="w-full py-2.5 px-4 bg-[#487629] hover:bg-[#31521F] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-colors">
-                    <span class="material-symbols-outlined text-base">school</span>
-                    <span>Masuk dengan SSO Mahasiswa</span>
-                </button>
-                <button type="button" onclick="simulateLogin('Dosen / Tenaga Pendidik')" class="w-full py-2.5 px-4 bg-[#F7F8F6] hover:bg-[#EAECE8] border border-[#E5E7E3] text-[#172019] rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-colors">
-                    <span class="material-symbols-outlined text-base">badge</span>
-                    <span>Masuk dengan SSO Dosen / Tendik</span>
-                </button>
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0B6839] to-[#074324] text-[#F6AE01] flex items-center justify-center group-hover:scale-105 transition-transform shadow-xs">
+                    <span class="material-symbols-outlined text-2xl">search_check</span>
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-[#0B6839] bg-[#F0FDF4] px-2.5 py-0.5 rounded-full border border-[#C2E4CD]">Katalog Online</span>
+                    <h3 class="text-base font-bold text-[#074324] mt-1.5 group-hover:text-[#0B6839] transition-colors">Katalog Online (DIGILIB OPAC)</h3>
+                    <p class="text-xs text-[#64748B] leading-relaxed mt-1.5">
+                        Layanan katalog terpadu untuk mencari dan menelusuri ketersediaan koleksi buku tercetak di Perpustakaan Universitas dan cabang fakultas.
+                    </p>
+                </div>
             </div>
+            <div class="pt-4 mt-4 border-t border-[#D6EADF] flex items-center justify-between text-xs font-bold text-[#0B6839]">
+                <span>Buka digilib.usu.ac.id</span>
+                <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+        </a>
+
+        <!-- 2. Repositori USU -->
+        <a href="https://repositori.usu.ac.id" target="_blank" class="usu-card p-6 flex flex-col justify-between hover:border-[#0B6839] group transition-all">
+            <div class="space-y-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0B6839] to-[#074324] text-[#F6AE01] flex items-center justify-center group-hover:scale-105 transition-transform shadow-xs">
+                    <span class="material-symbols-outlined text-2xl">school</span>
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-[#0B6839] bg-[#F0FDF4] px-2.5 py-0.5 rounded-full border border-[#C2E4CD]">Open Access</span>
+                    <h3 class="text-base font-bold text-[#074324] mt-1.5 group-hover:text-[#0B6839] transition-colors">Repositori Institusi USU</h3>
+                    <p class="text-xs text-[#64748B] leading-relaxed mt-1.5">
+                        Penyimpanan dan akses karya ilmiah sivitas akademika, skripsi, tesis, disertasi, dan laporan penelitian dosen Universitas Sumatera Utara.
+                    </p>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#D6EADF] flex items-center justify-between text-xs font-bold text-[#0B6839]">
+                <span>Buka repositori.usu.ac.id</span>
+                <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+        </a>
+
+        <!-- 3. E-Journal & Database -->
+        <a href="https://resourceguide.usu.ac.id" target="_blank" class="usu-card p-6 flex flex-col justify-between hover:border-[#0B6839] group transition-all">
+            <div class="space-y-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0B6839] to-[#074324] text-[#F6AE01] flex items-center justify-center group-hover:scale-105 transition-transform shadow-xs">
+                    <span class="material-symbols-outlined text-2xl">article</span>
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-[#0B6839] bg-[#F0FDF4] px-2.5 py-0.5 rounded-full border border-[#C2E4CD]">Database Internasional</span>
+                    <h3 class="text-base font-bold text-[#074324] mt-1.5 group-hover:text-[#0B6839] transition-colors">Jurnal Elektronik (E-Journal)</h3>
+                    <p class="text-xs text-[#64748B] leading-relaxed mt-1.5">
+                        Akses pangkalan data jurnal ilmiah terlanggan (ScienceDirect, Scopus, SpringerLink, IEEE, Emerald, ProQuest, EBSCO) bagi sivitas USU.
+                    </p>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#D6EADF] flex items-center justify-between text-xs font-bold text-[#0B6839]">
+                <span>Akses Database Jurnal</span>
+                <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+        </a>
+
+        <!-- 4. Buku Elektronik (E-Book) -->
+        <a href="https://resourceguide.usu.ac.id" target="_blank" class="usu-card p-6 flex flex-col justify-between hover:border-[#0B6839] group transition-all">
+            <div class="space-y-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0B6839] to-[#074324] text-[#F6AE01] flex items-center justify-center group-hover:scale-105 transition-transform shadow-xs">
+                    <span class="material-symbols-outlined text-2xl">tablet_mac</span>
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-[#0B6839] bg-[#F0FDF4] px-2.5 py-0.5 rounded-full border border-[#C2E4CD]">Buku Digital</span>
+                    <h3 class="text-base font-bold text-[#074324] mt-1.5 group-hover:text-[#0B6839] transition-colors">Buku Elektronik (E-Book)</h3>
+                    <p class="text-xs text-[#64748B] leading-relaxed mt-1.5">
+                        Ribuan judul buku teks elektronik dan monograf ilmiah berkualitas tinggi yang dapat dibaca dan diunduh melalui perangkat mobile & laptop.
+                    </p>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#D6EADF] flex items-center justify-between text-xs font-bold text-[#0B6839]">
+                <span>Jelajahi E-Book</span>
+                <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+        </a>
+
+        <!-- 5. Resource Guide USU -->
+        <a href="https://resourceguide.usu.ac.id" target="_blank" class="usu-card p-6 flex flex-col justify-between hover:border-[#0B6839] group transition-all">
+            <div class="space-y-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0B6839] to-[#074324] text-[#F6AE01] flex items-center justify-center group-hover:scale-105 transition-transform shadow-xs">
+                    <span class="material-symbols-outlined text-2xl">travel_explore</span>
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-[#0B6839] bg-[#F0FDF4] px-2.5 py-0.5 rounded-full border border-[#C2E4CD]">Panduan Riset</span>
+                    <h3 class="text-base font-bold text-[#074324] mt-1.5 group-hover:text-[#0B6839] transition-colors">Panduan Sumber Daya (Resource Guide)</h3>
+                    <p class="text-xs text-[#64748B] leading-relaxed mt-1.5">
+                        Petunjuk navigasi basis data ilmiah per bidang ilmu (Kedokteran, Teknik, Pertanian, Hukum, Ekonomi, Ilmu Budaya, dll).
+                    </p>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#D6EADF] flex items-center justify-between text-xs font-bold text-[#0B6839]">
+                <span>Buka resourceguide.usu.ac.id</span>
+                <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+        </a>
+
+        <!-- 6. Cek Pinjaman & Mandiri -->
+        <a href="https://digilib.usu.ac.id/login.php" target="_blank" class="usu-card p-6 flex flex-col justify-between hover:border-[#0B6839] group transition-all">
+            <div class="space-y-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0B6839] to-[#074324] text-[#F6AE01] flex items-center justify-center group-hover:scale-105 transition-transform shadow-xs">
+                    <span class="material-symbols-outlined text-2xl">account_circle</span>
+                </div>
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-[#0B6839] bg-[#F0FDF4] px-2.5 py-0.5 rounded-full border border-[#C2E4CD]">Layanan Mandiri</span>
+                    <h3 class="text-base font-bold text-[#074324] mt-1.5 group-hover:text-[#0B6839] transition-colors">Cek Pinjaman Buku & Akun</h3>
+                    <p class="text-xs text-[#64748B] leading-relaxed mt-1.5">
+                        Cek status buku yang sedang dipinjam, tenggat pengembalian, perpanjangan masa pinjam mandiri, dan bebas pustaka.
+                    </p>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#D6EADF] flex items-center justify-between text-xs font-bold text-[#0B6839]">
+                <span>Masuk Akun Anggota</span>
+                <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+        </a>
+
+    </div>
+</section>
+
+<!-- LAYANAN & FASILITAS PERPUSTAKAAN (RINGKASAN UMUM & SLIDER FOTO) -->
+<section class="space-y-6" id="layanan-utama">
+    <div class="border-b border-[#D6EADF] pb-3 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="w-1.5 h-4 rounded-full bg-[#F6AE01]"></span>
+                <span class="text-xs font-bold uppercase tracking-wider text-[#0B6839]">Cakupan Layanan Unggulan</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-[#074324]">Layanan & Fasilitas Perpustakaan USU</h2>
+            <p class="text-xs sm:text-sm text-[#64748B] mt-0.5">Eksplorasi layanan fisik, portal digital, dan area belajar modern UPT Perpustakaan Universitas Sumatera Utara.</p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+            <span class="inline-flex items-center gap-1.5 text-xs text-[#64748B] font-medium bg-white px-3 py-1.5 rounded-full border border-[#D6EADF]">
+                <span class="material-symbols-outlined text-sm text-[#0B6839]">verified</span>
+                <span>4 Layanan & Unit Utama</span>
+            </span>
         </div>
     </div>
 
-    <!-- Interactive Client Script -->
-    <script>
-        // Database of detailed services for modal & search suggestions
-        const SERVICES_DATA = {
-            'turnitin': {
-                title: 'Permintaan Uji Turnitin',
-                category: 'Layanan Daring',
-                badgeClass: 'badge-google-form',
-                icon: 'spellcheck',
-                iconBg: 'bg-[#FFF7ED]',
-                iconColor: 'text-[#C2410C]',
-                desc: 'Layanan pemeriksaan orisinalitas naskah karya ilmiah (skripsi, tesis, disertasi, artikel jurnal) menggunakan software Turnitin resmi Perpustakaan USU.',
-                requirements: [
-                    'File naskah dalam format .docx atau .pdf (maksimal 20MB)',
-                    'Identitas mahasiswa aktif / dosen USU (NIM/NIP valid)',
-                    'Naskah sudah mencakup Bab 1 sampai Bab Penutup (tanpa lampiran besar)'
-                ],
-                steps: '1. Isi Google Form permohonan Turnitin -> 2. Tim pustakawan memproses naskah dalam 1x24 jam kerja -> 3. Hasil uji kemiripan (Similarity Report PDF) dikirimkan ke email terdaftar.',
-                actionUrl: 'https://bit.ly/TurnitinUSU2026',
-                actionText: 'Isi Google Form Turnitin'
-            },
-            'penelusuran-literatur': {
-                title: 'Penelusuran Literatur Bereputasi',
-                category: 'Layanan Daring',
-                badgeClass: 'badge-online',
-                icon: 'travel_explore',
-                iconBg: 'bg-[#F0FDF4]',
-                iconColor: 'text-[#15803D]',
-                desc: 'Asistensi penelusuran artikel jurnal internasional bereputasi (Scopus, ScienceDirect, IEEE Xplore, Taylor & Francis, Springer) yang dilanggan oleh Universitas Sumatera Utara.',
-                requirements: [
-                    'Topik riset / kata kunci spesifik',
-                    'Daftar jurnal atau DOI yang dibutuhkan (jika ada)',
-                    'KTM / Akun SSO USU aktif'
-                ],
-                steps: '1. Ajukan topik melalui portal konsultasi daring -> 2. Pustakawan spesialis subjek akan mencari artikel full-text relevan -> 3. Artikel digital dikirimkan ke email pemustaka.',
-                actionUrl: 'https://resourceguide.usu.ac.id',
-                actionText: 'Akses Resource Guide'
-            },
-            'reservasi-buku': {
-                title: 'Reservasi Buku Sirkulasi',
-                category: 'Layanan Daring',
-                badgeClass: 'badge-reservasi',
-                icon: 'auto_stories',
-                iconBg: 'bg-[#F0F4EE]',
-                iconColor: 'text-[#487629]',
-                desc: 'Pemesanan buku koleksi sirkulasi secara online melalui katalog OPAC sebelum diambil di perpustakaan pusat atau cabang.',
-                requirements: [
-                    'Nomor Barcode / Judul buku dari katalog DIGILIB OPAC',
-                    'Status keanggotaan aktif tanpa tanggungan denda',
-                    'Pengambilan buku maksimal 1x24 jam setelah reservasi disetujui'
-                ],
-                steps: '1. Cari buku di katalog OPAC -> 2. Klik tombol "Reservasi" pada detail buku -> 3. Tunjukkan notifikasi ke meja sirkulasi untuk peminjaman.',
-                actionUrl: 'https://digilib.usu.ac.id',
-                actionText: 'Buka DIGILIB OPAC'
-            },
-            'skbp': {
-                title: 'Surat Keterangan Bebas Pustaka (SKBP)',
-                category: 'Layanan Daring',
-                badgeClass: 'badge-online',
-                icon: 'verified_user',
-                iconBg: 'bg-[#F0FDF4]',
-                iconColor: 'text-[#15803D]',
-                desc: 'Penerbitan surat digital yang menyatakan mahasiswa telah memenuhi seluruh kewajiban penyerahan karya akhir dan bebas dari pinjaman buku.',
-                requirements: [
-                    'Telah mengunggah naskah final di Repositori USU & disetujui',
-                    'Tidak memiliki pinjaman buku aktif atau tunggakan denda',
-                    'Surat bebas pinjam dari perpustakaan fakultas masing-masing'
-                ],
-                steps: '1. Login ke portal SKBP Online -> 2. Sistem memvalidasi repositori & pinjaman -> 3. SKBP ber-QR Code resmi terbit dan dapat diunduh.',
-                actionUrl: 'https://library.usu.ac.id/id/skbp',
-                actionText: 'Ajukan SKBP Online'
-            },
-            'unggah-mandiri': {
-                title: 'Unggah Mandiri Karya Akhir',
-                category: 'Layanan Daring',
-                badgeClass: 'badge-online',
-                icon: 'cloud_upload',
-                iconBg: 'bg-[#F0FDF4]',
-                iconColor: 'text-[#15803D]',
-                desc: 'Penyerahan file digital tugas akhir/skripsi/tesis/disertasi ke Repositori Institusi USU sebagai arsip akademik dan syarat bebas pustaka.',
-                requirements: [
-                    'File naskah lengkap (Cover, Pengesahan, Bab 1-Penutup, Abstrak)',
-                    'Lembar persetujuan publikasi karya ilmiah bermaterai',
-                    'Format file sesuai pedoman standar Repositori USU (PDF)'
-                ],
-                steps: '1. Login ke repositori.usu.ac.id -> 2. Buat submission baru & unggah berkas -> 3. Verifikasi oleh editor perpustakaan dalam 2-3 hari kerja.',
-                actionUrl: 'https://repositori.usu.ac.id',
-                actionText: 'Buka Repositori USU'
-            },
-            'permintaan-karya-akhir': {
-                title: 'Permintaan Berkas Repository',
-                category: 'Layanan Daring',
-                badgeClass: 'badge-google-form',
-                icon: 'folder_zip',
-                iconBg: 'bg-[#FFF7ED]',
-                iconColor: 'text-[#C2410C]',
-                desc: 'Permohonan pembukaan akses dokumen karya akhir yang berstatus restricted / tertutup untuk keperluan referensi akademik.',
-                requirements: [
-                    'URL link repositori judul yang diminta',
-                    'Surat rekomendasi dosen pembimbing atau kartu mahasiswa aktif',
-                    'Pernyataan tidak menyebarluaskan dokumen'
-                ],
-                steps: '1. Lengkapi formulir permintaan berkas -> 2. Pustakawan memeriksa kelayakan -> 3. Berkas digital dikirim via tautan terproteksi.',
-                actionUrl: 'https://bit.ly/PermintaanRepositoriUSU',
-                actionText: 'Isi Formulir Permintaan'
-            },
-            'usulan-buku': {
-                title: 'Usulan Pengadaan Bahan Pustaka',
-                category: 'Layanan Daring',
-                badgeClass: 'badge-google-form',
-                icon: 'add_shopping_cart',
-                iconBg: 'bg-[#FFF7ED]',
-                iconColor: 'text-[#C2410C]',
-                desc: 'Formulir bagi sivitas akademika untuk mengajukan judul buku teks baru, buku referensi, e-book, atau langganan jurnal rujukan.',
-                requirements: [
-                    'Judul, Pengarang, Penerbit, dan ISBN buku yang diusulkan',
-                    'Justifikasi relevansi mata kuliah / bidang riset di USU',
-                    'Data pengusul (Mahasiswa / Dosen / Program Studi)'
-                ],
-                steps: '1. Isi data buku pada Google Form -> 2. Tim seleksi koleksi mengevaluasi usulan -> 3. Pengusul mendapat pemberitahuan saat buku tiba.',
-                actionUrl: 'https://bit.ly/UsulanBukuUSU2026',
-                actionText: 'Ajukan Usulan Buku'
-            },
-            'sirkulasi': {
-                title: 'Layanan Sirkulasi & Peminjaman',
-                category: 'Layanan Luring',
-                badgeClass: 'badge-luring',
-                icon: 'sync_alt',
-                iconBg: 'bg-[#F0F4EE]',
-                iconColor: 'text-[#487629]',
-                desc: 'Layanan peminjaman, pengembalian, perpanjangan masa pinjam, serta informasi koleksi buku teks umum di meja sirkulasi Lantai 1.',
-                requirements: [
-                    'KTM Mahasiswa USU aktif / Kartu Anggota Perpustakaan',
-                    'Maksimal 3 eksemplar buku untuk S1 (durasi 7 hari)',
-                    'Perpanjangan dapat dilakukan 1x jika buku tidak sedang direservasi pemustaka lain'
-                ],
-                steps: '1. Ambil buku dari rak koleksi -> 2. Bawa buku dan KTM ke meja sirkulasi Lantai 1 -> 3. Petugas memindai barcode transaksi.',
-                actionUrl: '#jam-layanan',
-                actionText: 'Lihat Jam Layanan'
-            },
-            'keanggotaan': {
-                title: 'Layanan Keanggotaan & KTM',
-                category: 'Layanan Luring',
-                badgeClass: 'badge-luring',
-                icon: 'badge',
-                iconBg: 'bg-[#F0F4EE]',
-                iconColor: 'text-[#487629]',
-                desc: 'Aktivasi barcode KTM untuk akses gate perpustakaan dan hak peminjaman koleksi cetak.',
-                requirements: [
-                    'KTM Mahasiswa USU yang masih berlaku',
-                    'KRS semester berjalan yang telah disetujui PA',
-                    'Foto profil formal (jika belum terdata di portal)'
-                ],
-                steps: '1. Datangi Front Office Lantai 1 -> 2. Tunjukkan KTM dan bukti registrasi semester -> 3. Petugas mengaktifkan status keanggotaan dalam 2 menit.',
-                actionUrl: '#jam-layanan',
-                actionText: 'Lokasi Front Office'
-            },
-            'bimbingan': {
-                title: 'Bimbingan Pemustaka & Orientasi',
-                category: 'Layanan Luring',
-                badgeClass: 'badge-luring',
-                icon: 'support_agent',
-                iconBg: 'bg-[#F0F4EE]',
-                iconColor: 'text-[#487629]',
-                desc: 'Layanan pendampingan pengguna baru untuk memahami denah lantai, klasifikasi rak DDC, pemanfaatan OPAC, dan tata tertib.',
-                requirements: [
-                    'Terbuka untuk perorangan maupun rombongan mahasiswa baru / delegasi fakultas',
-                    'Konfirmasi jadwal untuk rombongan lebih dari 10 orang'
-                ],
-                steps: '1. Temui pustakawan di Information Desk Lantai 1 -> 2. Ikuti sesi bimbingan singkat / library tour sesuai kebutuhan.',
-                actionUrl: '#jam-layanan',
-                actionText: 'Kunjungi Info Desk'
-            },
-            'referensi': {
-                title: 'Layanan Referensi & Sumatera Corner',
-                category: 'Layanan Luring',
-                badgeClass: 'badge-luring',
-                icon: 'menu_book',
-                iconBg: 'bg-[#F0F4EE]',
-                iconColor: 'text-[#487629]',
-                desc: 'Koleksi rujukan khusus mencakup ensiklopedia, kamus umum & istilah, almanak, data statistik BPS, serta naskah khusus budaya Sumatera Utara.',
-                requirements: [
-                    'Koleksi referensi hanya dapat dibaca di tempat (tidak dipinjamkan keluar)',
-                    'Disediakan fasilitas fotokopi terbatas / scanner mandiri sesuai aturan hak cipta'
-                ],
-                steps: '1. Naik ke Lantai 2 Ruang Referensi -> 2. Simpan tas di loker -> 3. Manfaatkan koleksi di meja baca referensi.',
-                actionUrl: '#jam-layanan',
-                actionText: 'Lokasi Lantai 2'
-            },
-            'kelas-literasi': {
-                title: 'Pendaftaran Kelas Literasi Informasi',
-                category: 'Workshop & Pelatihan',
-                badgeClass: 'badge-luring',
-                icon: 'co_present',
-                iconBg: 'bg-[#F0F4EE]',
-                iconColor: 'text-[#487629]',
-                desc: 'Workshop reguler setiap hari Selasa & Kamis yang mengajarkan teknik penelusuran jurnal Scopus, sitasi Mendeley, dan kiat publikasi ilmiah.',
-                requirements: [
-                    'Mahasiswa tingkat akhir (S1/S2/S3) atau dosen USU',
-                    'Membawa laptop pribadi dengan software Mendeley terpasang'
-                ],
-                steps: '1. Pilih jadwal sesi kelas -> 2. Isi form registrasi peserta -> 3. Hadir di Ruang Seminar Lantai 3 sesuai jadwal terpilih.',
-                actionUrl: 'https://bit.ly/KelasLiterasiUSU2026',
-                actionText: 'Daftar Sesi Kelas'
-            },
-            'anggota-tamu': {
-                title: 'Pendaftaran Anggota Tamu & Eksternal',
-                category: 'Keanggotaan',
-                badgeClass: 'badge-reservasi',
-                icon: 'person_add',
-                iconBg: 'bg-[#F0F4EE]',
-                iconColor: 'text-[#487629]',
-                desc: 'Kartu baca perpustakaan bagi alumni USU, mahasiswa perguruan tinggi mitra (FKP2TN), peneliti instansi, dan masyarakat umum.',
-                requirements: [
-                    'KTP / Tanda pengenal resmi yang berlaku',
-                    'Surat pengantar dari perguruan tinggi / instansi asal (untuk peneliti)',
-                    'Biaya administrasi kartu tamu sesuai tarif PNBP resmi'
-                ],
-                steps: '1. Datang ke loket pendaftaran tamu Lantai 1 -> 2. Mengisi formulir identitas pemustaka luar -> 3. Kartu izin baca harian/bulanan diterbitkan.',
-                actionUrl: '#jam-layanan',
-                actionText: 'Prosedur Tamu'
+    <!-- 4 RINGKASAN KARTU DETAIL DENGAN FOTO PREVIEW -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+
+        <!-- Card 1: Layanan Luring -->
+        <div class="usu-card overflow-hidden bg-white flex flex-col justify-between hover:border-[#0B6839] hover:shadow-md transition-all group">
+            <div class="h-32 w-full overflow-hidden relative">
+                <img src="{{ asset('images/layanan/luring.jpg') }}" alt="Layanan Luring" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <span class="absolute bottom-2.5 left-3 text-[11px] font-bold text-white flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-[#F6AE01]">storefront</span> Onsite
+                </span>
+            </div>
+            <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                <div>
+                    <h3 class="text-sm font-bold text-[#074324] group-hover:text-[#0B6839] transition-colors">Layanan Luring (Onsite)</h3>
+                    <p class="text-xs text-[#64748B] leading-relaxed mt-1">
+                        Sirkulasi peminjaman buku, aktivasi KTM/keanggotaan, bimbingan literasi informasi, dan layanan koleksi referensi di gedung perpustakaan.
+                    </p>
+                </div>
+                <div class="pt-3 border-t border-[#D6EADF]">
+                    <a href="{{ route('layanan.luring') }}" class="text-xs font-bold text-[#0B6839] hover:text-[#074324] inline-flex items-center gap-1 group/btn">
+                        <span>Lihat Rincian Luring</span>
+                        <span class="material-symbols-outlined text-xs group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Layanan Daring -->
+        <div class="usu-card overflow-hidden bg-white flex flex-col justify-between hover:border-[#0B6839] hover:shadow-md transition-all group">
+            <div class="h-32 w-full overflow-hidden relative">
+                <img src="{{ asset('images/layanan/daring.jpg') }}" alt="Layanan Daring" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <span class="absolute bottom-2.5 left-3 text-[11px] font-bold text-white flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-[#10B981]">cloud_sync</span> Online 24/7
+                </span>
+            </div>
+            <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                <div>
+                    <h3 class="text-sm font-bold text-[#074324] group-hover:text-[#0B6839] transition-colors">Layanan Daring (Online)</h3>
+                    <p class="text-xs text-[#64748B] leading-relaxed mt-1">
+                        Pengurusan SKBP online untuk syarat wisuda, pemeriksaan kesamaan naskah uji plagiarisme Turnitin, dan pemesanan artikel ilmiah.
+                    </p>
+                </div>
+                <div class="pt-3 border-t border-[#D6EADF]">
+                    <a href="{{ route('layanan.daring') }}" class="text-xs font-bold text-[#15803D] hover:text-[#074324] inline-flex items-center gap-1 group/btn">
+                        <span>Lihat Rincian Daring</span>
+                        <span class="material-symbols-outlined text-xs group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Area Belajar & Ruangan -->
+        <div class="usu-card overflow-hidden bg-white flex flex-col justify-between hover:border-[#0B6839] hover:shadow-md transition-all group">
+            <div class="h-32 w-full overflow-hidden relative">
+                <img src="{{ asset('images/layanan/area-belajar.jpg') }}" alt="Area Belajar & Ruangan" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <span class="absolute bottom-2.5 left-3 text-[11px] font-bold text-white flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-[#F6AE01]">meeting_room</span> Ruang Kolaboratif
+                </span>
+            </div>
+            <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                <div>
+                    <h3 class="text-sm font-bold text-[#074324] group-hover:text-[#0B6839] transition-colors">Area Belajar & Ruang Rapat</h3>
+                    <p class="text-xs text-[#64748B] leading-relaxed mt-1">
+                        The Gade Creative Lounge (TGCL), kubikel hening RUBELIN, ruang rapat dosen/mahasiswa Lantai 1-3, dan ruang konferensi mini.
+                    </p>
+                </div>
+                <div class="pt-3 border-t border-[#D6EADF] flex items-center justify-between">
+                    <a href="{{ route('layanan.area-belajar') }}" class="text-xs font-bold text-[#B45309] hover:text-[#78350F] inline-flex items-center gap-1 group/btn">
+                        <span>Fasilitas Ruang</span>
+                        <span class="material-symbols-outlined text-xs group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                    <a href="{{ route('jadwal.ruangan') }}" class="text-[11px] font-bold text-[#0B6839] hover:underline">
+                        Jadwal &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4: Perpustakaan Cabang -->
+        <div class="usu-card overflow-hidden bg-white flex flex-col justify-between hover:border-[#0B6839] hover:shadow-md transition-all group">
+            <div class="h-32 w-full overflow-hidden relative">
+                <img src="{{ asset('images/layanan/luring.webp') }}" alt="14 Cabang Fakultas" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <span class="absolute bottom-2.5 left-3 text-[11px] font-bold text-white flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm text-white">account_tree</span> 14 Unit
+                </span>
+            </div>
+            <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                <div>
+                    <h3 class="text-sm font-bold text-[#074324] group-hover:text-[#0B6839] transition-colors">14 Perpustakaan Cabang</h3>
+                    <p class="text-xs text-[#64748B] leading-relaxed mt-1">
+                        Jaringan unit perpustakaan di 14 Fakultas & Sekolah Pascasarjana di lingkungan USU untuk memperluas jangkauan referensi spesifik.
+                    </p>
+                </div>
+                <div class="pt-3 border-t border-[#D6EADF]">
+                    <a href="https://library.usu.ac.id/id/perpustakaan-cabang" target="_blank" class="text-xs font-bold text-[#0B6839] hover:text-[#074324] inline-flex items-center gap-1 group/btn">
+                        <span>Daftar Cabang USU</span>
+                        <span class="material-symbols-outlined text-xs group-hover/btn:translate-x-1 transition-transform">open_in_new</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- PERINGKAT INSTITUSI SCIMAGO & KEANGGOTAAN -->
+<section class="usu-card p-6 sm:p-8 bg-gradient-to-br from-[#074324] via-[#053B1F] to-[#032714] text-white border-2 border-[#0B6839] shadow-lg">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <div class="lg:col-span-7 space-y-3">
+            <div class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#F6AE01]">
+                <span class="material-symbols-outlined text-sm">workspace_premium</span>
+                <span>Peringkat & Reputasi Akademik Global</span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-extrabold text-white">Peringkat Institusi Scimago (SIR) & Keanggotaan</h3>
+            <p class="text-xs sm:text-sm text-white/85 leading-relaxed">
+                Dukungan pangkalan data referensi dan repositori ilmiah Perpustakaan USU berkontribusi aktif terhadap capaian pemeringkatan riset global Universitas Sumatera Utara.
+            </p>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                <div class="p-3.5 bg-white/10 backdrop-blur-xs rounded-xl border border-white/20 text-center hover:bg-white/15 transition-all">
+                    <span class="text-2xl font-extrabold text-[#F6AE01] block">#40</span>
+                    <span class="text-[10px] text-white/80 uppercase font-bold tracking-wider">Overall</span>
+                </div>
+                <div class="p-3.5 bg-white/10 backdrop-blur-xs rounded-xl border border-white/20 text-center hover:bg-white/15 transition-all">
+                    <span class="text-2xl font-extrabold text-[#F6AE01] block">#20</span>
+                    <span class="text-[10px] text-white/80 uppercase font-bold tracking-wider">Research</span>
+                </div>
+                <div class="p-3.5 bg-white/10 backdrop-blur-xs rounded-xl border border-white/20 text-center hover:bg-white/15 transition-all">
+                    <span class="text-2xl font-extrabold text-[#F6AE01] block">#85</span>
+                    <span class="text-[10px] text-white/80 uppercase font-bold tracking-wider">Innovation</span>
+                </div>
+                <div class="p-3.5 bg-white/10 backdrop-blur-xs rounded-xl border border-white/20 text-center hover:bg-white/15 transition-all">
+                    <span class="text-2xl font-extrabold text-[#F6AE01] block">#27</span>
+                    <span class="text-[10px] text-white/80 uppercase font-bold tracking-wider">Societal</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-white/10 backdrop-blur-sm p-5 rounded-2xl border border-white/20 space-y-3">
+            <span class="text-xs font-bold text-[#F6AE01] uppercase tracking-wider block flex items-center gap-1.5">
+                <span class="w-1.5 h-3.5 bg-[#F6AE01] rounded-full inline-block"></span>
+                Mitra Jaringan & Keanggotaan:
+            </span>
+            <div class="space-y-2 text-xs text-white">
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/10">
+                    <div class="w-9 h-9 rounded-xl bg-[#0B6839] text-[#F6AE01] ring-1 ring-[#F6AE01]/40 flex items-center justify-center shrink-0 font-extrabold text-xs">RI</div>
+                    <div>
+                        <span class="font-bold text-white block">Perpustakaan Nasional RI (Perpusnas)</span>
+                        <span class="text-[11px] text-white/70">Akses E-Resources Nasional Terintegrasi</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/10">
+                    <div class="w-9 h-9 rounded-xl bg-[#F6AE01] text-[#074324] flex items-center justify-center shrink-0 font-extrabold text-xs">DOAJ</div>
+                    <div>
+                        <span class="font-bold text-white block">Directory of Open Access Journals</span>
+                        <span class="text-[11px] text-white/70">Indeks Jurnal Akses Terbuka Global</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BERITA & PENGUMUMAN TERBARU PERPUSTAKAAN -->
+<section class="space-y-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#D6EADF] pb-3">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="w-1.5 h-4 rounded-full bg-[#F6AE01]"></span>
+                <span class="text-xs font-bold uppercase tracking-wider text-[#0B6839]">Warta & Informasi</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-[#074324]">Berita & Pengumuman Terbaru</h2>
+        </div>
+        <a href="https://library.usu.ac.id/id/berita" target="_blank" class="text-xs font-bold text-[#0B6839] hover:underline inline-flex items-center gap-1">
+            <span>Lihat Semua di library.usu.ac.id</span>
+            <span class="material-symbols-outlined text-xs">open_in_new</span>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        
+        <!-- Berita 1 -->
+        <div class="usu-card overflow-hidden bg-white flex flex-col justify-between hover:border-[#0B6839] hover:shadow-md transition-all">
+            <div class="p-5 space-y-2.5">
+                <div class="flex items-center justify-between text-[11px] text-[#64748B]">
+                    <span class="px-2.5 py-0.5 rounded-full bg-[#F0FDF4] text-[#0B6839] font-bold border border-[#C2E4CD]">Berita</span>
+                    <span>03 September 2026</span>
+                </div>
+                <h3 class="text-sm font-bold text-[#074324] leading-snug hover:text-[#0B6839] transition-colors">
+                    Perkuat Mutu Perpustakaan, Pustakawan USU Jadi Narasumber Sosialisasi Akreditasi
+                </h3>
+                <p class="text-xs text-[#64748B] line-clamp-3 leading-relaxed">
+                    Pustakawan Perpustakaan USU menjadi narasumber dalam forum peningkatan standar mutu akreditasi perpustakaan perguruan tinggi.
+                </p>
+            </div>
+            <div class="px-5 pb-4 pt-2 border-t border-[#F1F5F9]">
+                <a href="https://library.usu.ac.id/id/berita" target="_blank" class="text-xs font-bold text-[#0B6839] inline-flex items-center gap-1 hover:underline">
+                    <span>Baca Selengkapnya</span>
+                    <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Berita 2 -->
+        <div class="usu-card overflow-hidden bg-white flex flex-col justify-between hover:border-[#0B6839] hover:shadow-md transition-all">
+            <div class="p-5 space-y-2.5">
+                <div class="flex items-center justify-between text-[11px] text-[#64748B]">
+                    <span class="px-2.5 py-0.5 rounded-full bg-[#F0FDF4] text-[#0B6839] font-bold border border-[#C2E4CD]">Literasi Informasi</span>
+                    <span>10 Agustus 2026</span>
+                </div>
+                <h3 class="text-sm font-bold text-[#074324] leading-snug hover:text-[#0B6839] transition-colors">
+                    Perpustakaan USU Gelar Pelatihan Dasar Canva Batch II Program Liburan
+                </h3>
+                <p class="text-xs text-[#64748B] line-clamp-3 leading-relaxed">
+                    Menutup rangkaian kelas literasi informasi liburan, mahasiswa USU dibekali kompetensi desain visual dan publikasi digital.
+                </p>
+            </div>
+            <div class="px-5 pb-4 pt-2 border-t border-[#F1F5F9]">
+                <a href="https://library.usu.ac.id/id/berita" target="_blank" class="text-xs font-bold text-[#0B6839] inline-flex items-center gap-1 hover:underline">
+                    <span>Baca Selengkapnya</span>
+                    <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Berita 3 -->
+        <div class="usu-card overflow-hidden bg-white flex flex-col justify-between hover:border-[#0B6839] hover:shadow-md transition-all">
+            <div class="p-5 space-y-2.5">
+                <div class="flex items-center justify-between text-[11px] text-[#64748B]">
+                    <span class="px-2.5 py-0.5 rounded-full bg-[#F0FDF4] text-[#0B6839] font-bold border border-[#C2E4CD]">Transformasi Digital</span>
+                    <span>10 Agustus 2026</span>
+                </div>
+                <h3 class="text-sm font-bold text-[#074324] leading-snug hover:text-[#0B6839] transition-colors">
+                    Kepala Perpustakaan Hadiri KPDI ke-17: Transformasi Perpustakaan di Era AI
+                </h3>
+                <p class="text-xs text-[#64748B] line-clamp-3 leading-relaxed">
+                    Penguatan integrasi teknologi kecerdasan buatan (AI) menuju Smart Academic Library berstandar internasional di lingkungan USU.
+                </p>
+            </div>
+            <div class="px-5 pb-4 pt-2 border-t border-[#F1F5F9]">
+                <a href="https://library.usu.ac.id/id/berita" target="_blank" class="text-xs font-bold text-[#0B6839] inline-flex items-center gap-1 hover:underline">
+                    <span>Baca Selengkapnya</span>
+                    <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- KONTAK & LOKASI RESMI PERPUSTAKAAN USU -->
+<section class="usu-card p-6 sm:p-8 bg-gradient-to-r from-[#F4F9F5] via-white to-[#F0FDF4] border-2 border-[#C2E4CD]">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="space-y-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-[#0B6839] flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-base text-[#F6AE01]">location_on</span>
+                <span>Lokasi Gedung Utama</span>
+            </span>
+            <p class="text-xs leading-relaxed text-[#475569]">
+                <strong class="text-[#074324]">Gedung UPT Perpustakaan USU</strong><br>
+                Jalan Perpustakaan No. 1, Kampus USU, Padang Bulan, Kec. Medan Baru, Kota Medan, Sumatera Utara 20155.
+            </p>
+        </div>
+
+        <div class="space-y-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-[#0B6839] flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-base text-[#F6AE01]">mail</span>
+                <span>Kontak & Surel Resmi</span>
+            </span>
+            <p class="text-xs leading-relaxed text-[#475569]">
+                <strong class="text-[#074324]">Email:</strong> <a href="mailto:libraryp@usu.ac.id" class="text-[#0B6839] font-semibold hover:underline">libraryp@usu.ac.id</a><br>
+                <strong class="text-[#074324]">Telepon:</strong> (061) 8218666<br>
+                <strong class="text-[#074324]">Helpdesk:</strong> Tersedia di Lobi Lantai 1
+            </p>
+        </div>
+
+        <div class="space-y-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-[#0B6839] flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-base text-[#F6AE01]">verified</span>
+                <span>Status Akreditasi</span>
+            </span>
+            <p class="text-xs leading-relaxed text-[#475569]">
+                Terakreditasi <strong class="text-[#074324]">A (Unggul)</strong> oleh Perpustakaan Nasional Republik Indonesia. Mendukung pemenuhan Tri Dharma Perguruan Tinggi.
+            </p>
+        </div>
+    </div>
+</section>
+@endsection
+
+@section('scripts')
+<script>
+
+
+    // =========================================================================
+    // SLIDER FOTO LAYANAN (BERGESER SETIAP 10 DETIK + SEAMLESS PAUSE/RESUME ON HOVER)
+    // =========================================================================
+    const track = document.getElementById('layanan-slider-track');
+    const progressBar = document.getElementById('slider-progress-bar');
+    const counterEl = document.getElementById('slider-counter');
+    const sliderContainer = document.getElementById('layanan-slider-container');
+    const tabBtns = document.querySelectorAll('.slider-tab-btn');
+
+    if (track && sliderContainer) {
+        let currentLayananSlide = 0;
+        const TOTAL_LAYANAN_SLIDES = 3;
+        const LAYANAN_INTERVAL_MS = 10000; // 10 Detik
+        let slideStartTime = performance.now();
+        let slideElapsed = 0;
+        let isLayananPaused = false;
+        let progressRaf = null;
+
+        function updateSlideUI() {
+            track.style.transform = `translateX(-${currentLayananSlide * 100}%)`;
+            if (counterEl) {
+                counterEl.innerText = `${currentLayananSlide + 1} / ${TOTAL_LAYANAN_SLIDES}`;
             }
+            tabBtns.forEach((btn, idx) => {
+                if (idx === currentLayananSlide) {
+                    btn.classList.add('bg-[#F0FDF4]', 'border-[#0B6839]', 'shadow-xs');
+                    btn.classList.remove('border-transparent');
+                } else {
+                    btn.classList.remove('bg-[#F0FDF4]', 'border-[#0B6839]', 'shadow-xs');
+                    btn.classList.add('border-transparent');
+                }
+            });
+        }
+
+        function resetSlideTimer() {
+            slideStartTime = performance.now();
+            slideElapsed = 0;
+            if (progressBar) progressBar.style.width = '0%';
+        }
+
+        function loopLayanan(now) {
+            if (!isLayananPaused) {
+                slideElapsed = now - slideStartTime;
+                if (slideElapsed >= LAYANAN_INTERVAL_MS) {
+                    currentLayananSlide = (currentLayananSlide + 1) % TOTAL_LAYANAN_SLIDES;
+                    updateSlideUI();
+                    slideStartTime = performance.now();
+                    slideElapsed = 0;
+                }
+                const pct = Math.min((slideElapsed / LAYANAN_INTERVAL_MS) * 100, 100);
+                if (progressBar) progressBar.style.width = pct + '%';
+            }
+            progressRaf = requestAnimationFrame(loopLayanan);
+        }
+
+        window.nextLayananSlide = function() {
+            currentLayananSlide = (currentLayananSlide + 1) % TOTAL_LAYANAN_SLIDES;
+            updateSlideUI();
+            resetSlideTimer();
         };
 
-        // Scroll Helper
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
+        window.prevLayananSlide = function() {
+            currentLayananSlide = (currentLayananSlide - 1 + TOTAL_LAYANAN_SLIDES) % TOTAL_LAYANAN_SLIDES;
+            updateSlideUI();
+            resetSlideTimer();
+        };
 
-        // Quick Category Filter
-        function setCategoryFilter(category) {
-            const tabs = document.querySelectorAll('.category-tab');
-            tabs.forEach(tab => {
-                const cat = tab.getAttribute('data-category');
-                if (cat === category) {
-                    tab.className = 'category-tab px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-[#487629] text-white whitespace-nowrap transition-all shadow-2xs';
-                } else {
-                    tab.className = 'category-tab px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white text-[#5F685F] hover:bg-[#F0F4EE] hover:text-[#172019] border border-[#E5E7E3] whitespace-nowrap transition-all';
-                }
-            });
+        window.goToLayananSlide = function(index) {
+            currentLayananSlide = index;
+            updateSlideUI();
+            resetSlideTimer();
+        };
 
-            const items = document.querySelectorAll('.service-item');
-            items.forEach(item => {
-                const itemCat = item.getAttribute('data-category');
-                if (category === 'semua' || itemCat === category) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
+        sliderContainer.addEventListener('mouseenter', () => {
+            isLayananPaused = true;
+        });
 
-        // Live Search & Instant Suggestions
-        const searchInput = document.getElementById('main-search-input');
-        const clearBtn = document.getElementById('clear-search-btn');
-        const suggestionsBox = document.getElementById('search-suggestions');
-        const suggestionsContainer = document.getElementById('suggestion-items');
-
-        function focusSearchInput() {
-            searchInput.focus();
-            scrollToSection('beranda');
-        }
-
-        // Keyboard Shortcut ⌘K / Ctrl+K
-        document.addEventListener('keydown', function(e) {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                e.preventDefault();
-                focusSearchInput();
+        sliderContainer.addEventListener('mouseleave', () => {
+            if (isLayananPaused) {
+                slideStartTime = performance.now() - slideElapsed;
+                isLayananPaused = false;
             }
         });
 
-        searchInput.addEventListener('input', function() {
-            const val = this.value.trim().toLowerCase();
-            
-            if (val.length > 0) {
-                clearBtn.classList.remove('hidden');
-                renderSuggestions(val);
-            } else {
-                clearBtn.classList.add('hidden');
-                suggestionsBox.classList.add('hidden');
-                // Reset service grid filter
-                document.querySelectorAll('.service-item').forEach(item => item.style.display = 'flex');
+        // Touch swipe for mobile devices
+        let touchStartX = 0;
+        sliderContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            isLayananPaused = true;
+        }, { passive: true });
+
+        sliderContainer.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) {
+                window.nextLayananSlide();
+            } else if (touchEndX - touchStartX > 50) {
+                window.prevLayananSlide();
             }
-        });
+            slideStartTime = performance.now() - slideElapsed;
+            isLayananPaused = false;
+        }, { passive: true });
 
-        clearBtn.addEventListener('click', function() {
-            searchInput.value = '';
-            clearBtn.classList.add('hidden');
-            suggestionsBox.classList.add('hidden');
-            document.querySelectorAll('.service-item').forEach(item => item.style.display = 'flex');
-            searchInput.focus();
-        });
+        updateSlideUI();
+        progressRaf = requestAnimationFrame(loopLayanan);
+    }
 
-        function renderSuggestions(query) {
-            const matches = [];
-            
-            // Search in SERVICES_DATA
-            for (let key in SERVICES_DATA) {
-                const item = SERVICES_DATA[key];
-                if (item.title.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query) || key.includes(query)) {
-                    matches.push({ type: 'service', key: key, title: item.title, category: item.category, icon: item.icon });
-                }
-            }
 
-            // Search in Rooms
-            const rooms = [
-                { type: 'room', key: 'tgcl', title: 'The Gade Creative Lounge (TGCL)', category: 'Lantai 1 • Kapasitas 40 Orang', icon: 'groups' },
-                { type: 'room', key: 'rubelin', title: 'Ruang Belajar Mandiri (RUBELIN)', category: 'Lantai 2 • 24 Cubicle', icon: 'chair_alt' },
-                { type: 'room', key: 'rapat-1', title: 'Ruang Rapat / Diskusi 1', category: 'Lantai 2 • Kapasitas 12 Orang', icon: 'meeting_room' },
-                { type: 'room', key: 'konferensi', title: 'Ruang Konferensi', category: 'Lantai 3 • Kapasitas 80 Orang', icon: 'podium' }
-            ];
-
-            rooms.forEach(r => {
-                if (r.title.toLowerCase().includes(query) || r.category.toLowerCase().includes(query)) {
-                    matches.push(r);
-                }
-            });
-
-            if (matches.length > 0) {
-                suggestionsBox.classList.remove('hidden');
-                suggestionsContainer.innerHTML = matches.map(m => `
-                    <div onclick="selectSuggestion('${m.type}', '${m.key}')" class="p-3 hover:bg-[#F0F4EE] cursor-pointer flex items-center justify-between transition-colors">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-[#F0F4EE] text-[#487629] flex items-center justify-center">
-                                <span class="material-symbols-outlined text-base">${m.icon}</span>
-                            </div>
-                            <div>
-                                <span class="text-xs font-bold text-[#172019] block">${m.title}</span>
-                                <span class="text-[11px] text-[#5F685F]">${m.category}</span>
-                            </div>
-                        </div>
-                        <span class="material-symbols-outlined text-sm text-[#8A928A]">north_west</span>
-                    </div>
-                `).join('');
-            } else {
-                suggestionsBox.classList.remove('hidden');
-                suggestionsContainer.innerHTML = `
-                    <div class="p-4 text-center text-xs text-[#8A928A]">
-                        Tidak ada layanan atau ruangan yang cocok dengan "<strong>${query}</strong>".
-                    </div>
-                `;
-            }
-
-            // Also filter visible service items in grid
-            const serviceItems = document.querySelectorAll('.service-item');
-            serviceItems.forEach(item => {
-                const text = item.innerText.toLowerCase();
-                const keywords = item.getAttribute('data-keywords') || '';
-                if (text.includes(query) || keywords.includes(query)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-
-        function selectSuggestion(type, key) {
-            suggestionsBox.classList.add('hidden');
-            if (type === 'service') {
-                openServiceDetailModal(key);
-            } else if (type === 'room') {
-                openReservationModal(key);
-            }
-        }
-
-        function quickFilterAction(keyword) {
-            searchInput.value = keyword;
-            searchInput.dispatchEvent(new Event('input'));
-            scrollToSection('layanan');
-        }
-
-        // Close suggestions on outside click
-        document.addEventListener('click', function(e) {
-            if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
-                suggestionsBox.classList.add('hidden');
-            }
-        });
-
-        // Service Modal Operations
-        function openServiceDetailModal(serviceId) {
-            const data = SERVICES_DATA[serviceId];
-            if (!data) return;
-
-            document.getElementById('modal-title').innerText = data.title;
-            document.getElementById('modal-badge').innerText = data.category;
-            document.getElementById('modal-badge').className = `${data.badgeClass} text-[10px] font-semibold px-2 py-0.5 rounded-md inline-block mb-1`;
-            document.getElementById('modal-icon').innerText = data.icon;
-            document.getElementById('modal-desc').innerText = data.desc;
-            
-            const reqList = document.getElementById('modal-requirements');
-            reqList.innerHTML = data.requirements.map(r => `<li>${r}</li>`).join('');
-
-            document.getElementById('modal-steps').innerText = data.steps;
-
-            const actionBtn = document.getElementById('modal-action-btn');
-            actionBtn.href = data.actionUrl;
-            actionBtn.querySelector('span').innerText = data.actionText;
-
-            document.getElementById('service-modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeServiceModal() {
-            document.getElementById('service-modal').classList.add('hidden');
-            document.body.style.overflow = '';
-        }
-
-        // Reservation Modal Operations
-        function openReservationModal(roomId) {
-            const selectEl = document.getElementById('res-room-select');
-            if (roomId && selectEl) {
-                selectEl.value = roomId;
-            }
-            document.getElementById('reservation-form').classList.remove('hidden');
-            document.getElementById('reservation-success').classList.add('hidden');
-            document.getElementById('reservation-modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeReservationModal() {
-            document.getElementById('reservation-modal').classList.add('hidden');
-            document.body.style.overflow = '';
-        }
-
-        function handleReservationSubmit(e) {
-            e.preventDefault();
-            const roomName = document.getElementById('res-room-select').options[document.getElementById('res-room-select').selectedIndex].text;
-            const code = 'USU-RES-' + Math.floor(1000 + Math.random() * 9000);
-            
-            document.getElementById('res-code').innerText = code;
-            document.getElementById('reservation-form').classList.add('hidden');
-            document.getElementById('reservation-success').classList.remove('hidden');
-        }
-
-        // Mobile Menu Toggle
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-nav-panel');
-            menu.classList.toggle('hidden');
-        }
-
-        // Login Modal Simulation
-        function openLoginModal() {
-            document.getElementById('login-modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeLoginModal() {
-            document.getElementById('login-modal').classList.add('hidden');
-            document.body.style.overflow = '';
-        }
-
-        function simulateLogin(userRole) {
-            closeLoginModal();
-            const container = document.getElementById('user-menu-container');
-            container.innerHTML = `
-                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F0F4EE] border border-[#DCE3D9] text-xs">
-                    <span class="w-2 h-2 rounded-full bg-[#5CB733]"></span>
-                    <span class="font-bold text-[#487629]">Ahmad Rivaldi (${userRole})</span>
-                    <button type="button" onclick="resetLoginState()" class="ml-2 text-[#8A928A] hover:text-[#DC2626]" title="Keluar">
-                        <span class="material-symbols-outlined text-sm">logout</span>
-                    </button>
-                </div>
-            `;
-        }
-
-        function resetLoginState() {
-            const container = document.getElementById('user-menu-container');
-            container.innerHTML = `
-                <button type="button" id="login-btn" onclick="openLoginModal()" class="usu-btn-primary px-4 py-2 text-xs flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-sm">login</span>
-                    <span>Masuk Akun</span>
-                </button>
-            `;
-        }
-
-        function openWhatsAppHelpdesk() {
-            window.open('https://wa.me/6281234567890?text=Halo%20Perpustakaan%20USU,%20saya%20ingin%20bertanya%20tentang%20layanan%20perpustakaan...', '_blank');
-        }
-    </script>
-</body>
-</html>
+</script>
+@endsection
