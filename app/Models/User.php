@@ -2,31 +2,66 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /** @var list<string> */
+    protected $fillable = [
+        'name',
+        'email',
+        'nim_nip',
+        'role',
+        'fakultas',
+        'phone',
+        'password',
+    ];
+
+    /** @var list<string> */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isPustakawan(): bool
+    {
+        return $this->role === 'pustakawan';
+    }
+
+    /** @return HasMany<RoomReservation, $this> */
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(RoomReservation::class);
+    }
+
+    /** @return HasMany<ContactMessage, $this> */
+    public function contactMessages(): HasMany
+    {
+        return $this->hasMany(ContactMessage::class);
+    }
+
+    /** @return HasMany<News, $this> */
+    public function news(): HasMany
+    {
+        return $this->hasMany(News::class, 'author_id');
     }
 }
