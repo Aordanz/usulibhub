@@ -1491,7 +1491,7 @@ function renderCalendarGrid() {
 function selectCalendarDate(dateStr) {
     calSelectedDateStr = dateStr;
     renderCalendarGrid();
-    renderTimeSlots();
+    renderTimeSlots(true);
 }
 
 // NAVIGATION MONTH
@@ -1539,8 +1539,10 @@ function setSlotFilter(filterType) {
     renderTimeSlots();
 }
 
-// RENDER TIME SLOTS LIST FOR SELECTED DATE
-function renderTimeSlots() {
+// RENDER TIME SLOTS LIST FOR SELECTED DATE (DATA-DRIVEN FROM DATABASE API)
+let currentRoomScheduleData = null;
+
+async function renderTimeSlots(forceRefresh = false) {
     const container = document.getElementById('cal-slots-container');
     if (!container) return;
 
@@ -1559,7 +1561,45 @@ function renderTimeSlots() {
         badgeEl.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-[#F8FAF7] text-[#64748B] border border-[#E2E8F0]';
     }
 
-    const schedule = getRoomSchedule(currentRoomModalKey || 'tgcl', calSelectedDateStr);
+    const roomKey = currentRoomModalKey || 'tgcl';
+    const dateStr = calSelectedDateStr;
+
+    // If already loaded for this room and date and not force refresh, use cached
+    if (!forceRefresh && currentRoomScheduleData && currentRoomScheduleData.room === roomKey && currentRoomScheduleData.date === dateStr) {
+        renderLoadedSlots(currentRoomScheduleData.slots);
+        return;
+    }
+
+    // Show loading skeleton
+    container.innerHTML = `
+        <div class="p-6 text-center rounded-xl bg-[#F8FAF7] border border-[#E2E8F0] space-y-2">
+            <span class="w-6 h-6 border-2 border-[#0B6839] border-t-transparent rounded-full animate-spin inline-block"></span>
+            <p class="text-xs font-semibold text-[#64748B]">Memuat ketersediaan ruangan dari database...</p>
+        </div>
+    `;
+
+    try {
+        const response = await fetch(`/api/rooms/schedule?room=${encodeURIComponent(roomKey)}&date=${encodeURIComponent(dateStr)}`);
+        if (response.ok) {
+            const data = await response.json();
+            if (data && Array.isArray(data.slots)) {
+                currentRoomScheduleData = { room: roomKey, date: dateStr, slots: data.slots };
+                renderLoadedSlots(data.slots);
+                return;
+            }
+        }
+    } catch (e) {
+        console.warn('API fetch failed, falling back to local resolver', e);
+    }
+
+    const fallbackSchedule = getRoomSchedule(roomKey, dateStr);
+    currentRoomScheduleData = { room: roomKey, date: dateStr, slots: fallbackSchedule };
+    renderLoadedSlots(fallbackSchedule);
+}
+
+function renderLoadedSlots(schedule) {
+    const container = document.getElementById('cal-slots-container');
+    if (!container) return;
 
     const bookedSlots = schedule.filter(s => s.status === 'booked');
     const availableSlots = schedule.filter(s => s.status === 'available');
@@ -1584,6 +1624,24 @@ function renderTimeSlots() {
     } else if (calActiveFilter === 'available') {
         visibleSlots = schedule.filter(s => s.status === 'available');
     }
+
+    // Prioritize slots with status 'available' (Tersedia) at the top
+    const STATUS_PRIORITY = {
+        'available': 0,
+        'review': 1,
+        'break': 2,
+        'booked': 3,
+        'closed': 4
+    };
+
+    visibleSlots = [...visibleSlots].sort((a, b) => {
+        const priorityA = STATUS_PRIORITY[a.status] ?? 99;
+        const priorityB = STATUS_PRIORITY[b.status] ?? 99;
+        if (priorityA !== priorityB) {
+            return priorityA - priorityB;
+        }
+        return a.time.localeCompare(b.time);
+    });
 
     if (visibleSlots.length === 0) {
         container.innerHTML = `
@@ -1753,9 +1811,16 @@ function openRoomCardModal(roomKey) {
         iconBg.className = 'w-12 h-12 rounded-xl bg-[#FEF2F2] text-[#EF4444] flex items-center justify-center shrink-0 shadow-xs';
     }
 
-    // Sessions (for Tab 2)
+    // Sessions (for Tab 2) - Prioritize Tersedia/Green sessions at the top
+    const COLOR_PRIORITY = { 'green': 0, 'amber': 1, 'grey': 2, 'red': 3 };
+    const sortedSessions = [...data.sessions].sort((a, b) => {
+        const pA = COLOR_PRIORITY[a.badgeColor] ?? 99;
+        const pB = COLOR_PRIORITY[b.badgeColor] ?? 99;
+        return pA - pB;
+    });
+
     const sessionsContainer = document.getElementById('rc-sessions-container');
-    sessionsContainer.innerHTML = data.sessions.map(s => {
+    sessionsContainer.innerHTML = sortedSessions.map(s => {
         let badgeBg = s.badgeColor === 'green' ? 'bg-[#F0FDF4] text-[#10B981] border-[#DCFCE7]' : (s.badgeColor === 'amber' ? 'bg-[#FFFBEB] text-[#B45309] border-[#FEF3C7]' : (s.badgeColor === 'red' ? 'bg-[#FEF2F2] text-[#EF4444] border-[#FEE2E2]' : 'bg-[#F1F5F9] text-[#64748B] border-[#E2E8F0]'));
         let dotBg = s.badgeColor === 'green' ? 'bg-[#10B981]' : (s.badgeColor === 'amber' ? 'bg-[#F59E0B]' : (s.badgeColor === 'red' ? 'bg-[#EF4444]' : 'bg-[#94A3B8]'));
         return `

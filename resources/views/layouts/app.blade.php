@@ -422,123 +422,181 @@
     <!-- ========================================================================= -->
     <!-- UNIFIED RESERVATION MODAL                                                 -->
     <!-- ========================================================================= -->
-    <div id="universal-res-modal" class="fixed inset-0 z-50 bg-[#0F172A]/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-[#E2E8F0] space-y-4 max-h-[90vh] overflow-y-auto">
+    <!-- ========================================================================= -->
+    <!-- UNIFIED RESERVATION MODAL (STEP-BY-STEP AVAILABILITY CHECK & FORM)         -->
+    <!-- ========================================================================= -->
+    <div id="universal-res-modal" class="fixed inset-0 z-50 bg-[#0F172A]/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-5 sm:p-6 shadow-2xl border border-[#E2E8F0] space-y-4 max-h-[92vh] overflow-y-auto transition-all">
+            
+            <!-- Modal Header -->
             <div class="flex items-start justify-between border-b border-[#E2E8F0] pb-3.5">
                 <div class="flex items-center gap-3">
-                    <img src="{{ asset('logousu.webp') }}" alt="Logo USU" class="w-9 h-9 object-contain shrink-0">
+                    <img src="{{ asset('logousu.webp') }}" alt="Logo USU" class="w-10 h-10 object-contain shrink-0">
                     <div>
-                        <span class="text-[10px] font-bold text-[#0B6839] uppercase tracking-wider">Formulir Reservasi Resmi</span>
-                        <h3 class="text-base font-bold text-[#0F172A]">Pengajuan Reservasi Layanan Perpustakaan USU</h3>
+                        <span class="text-[10px] font-extrabold text-[#0B6839] uppercase tracking-wider bg-[#F0FDF4] px-2 py-0.5 rounded-full border border-[#DCFCE7] inline-block">Sistem Reservasi Resmi</span>
+                        <h3 class="text-base font-bold text-[#0F172A] leading-snug">Pengajuan Reservasi Layanan & Ruangan</h3>
                     </div>
                 </div>
-                <button type="button" onclick="closeUniversalReservationModal()" class="text-[#94A3B8] hover:text-[#0F172A] p-1 rounded-lg hover:bg-[#F8FAF7]">
+                <button type="button" onclick="closeUniversalReservationModal()" class="text-[#94A3B8] hover:text-[#0F172A] p-1.5 rounded-lg hover:bg-[#F8FAF7] transition-colors">
                     <span class="material-symbols-outlined text-xl">close</span>
                 </button>
             </div>
 
-            <form id="universal-reservation-form" onsubmit="handleUniversalReservationSubmit(event)" class="space-y-3.5 text-xs sm:text-sm">
-                <div>
-                    <label class="block text-xs font-bold text-[#0F172A] mb-1">Pilihan Layanan / Ruangan</label>
-                    <select id="univ-service-select" class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs font-medium text-[#0F172A] outline-none focus:border-[#0B6839]">
-                        <optgroup label="Layanan Area Belajar & Ruang Rapat">
-                            <option value="tgcl">The Gade Creative Lounge (Lantai 1 - Coworking)</option>
-                            <option value="rubelin">Ruang Belajar Individu / RUBELIN (Lantai 1 - Hening Kedap Suara)</option>
-                            <option value="rapat-lt1">Ruang Rapat Lantai 1 (Kapasitas 6 / 18 Orang)</option>
-                            <option value="rapat-lt2">Ruang Rapat Lantai 2 (Kapasitas 12 Orang)</option>
-                            <option value="rapat-lt3">Ruang Rapat Lantai 3 (Kapasitas 8 Orang)</option>
-                            <option value="konferensi">Ruang Konferensi (Lantai 1 - Kapasitas 70 Orang)</option>
-                        </optgroup>
-                        <optgroup label="Layanan Luring (Onsite)">
-                            <option value="sirkulasi">Layanan Sirkulasi & Peminjaman (Lantai 1)</option>
-                            <option value="keanggotaan">Layanan Keanggotaan & Aktivasi KTM (Lantai 2)</option>
-                            <option value="bimbingan">Layanan Bimbingan Pengguna & Orientasi</option>
-                            <option value="referensi">Layanan Referensi Dosen & Pascasarjana (Lantai 1)</option>
-                            <option value="kelas-literasi">Layanan Kelas Literasi Informasi & Pelatihan</option>
-                        </optgroup>
-                        <optgroup label="Layanan Daring (Online)">
-                            <option value="reservasi-buku">Reservasi Koleksi Buku Standar (DIGILIB OPAC)</option>
-                            <option value="skbp">Layanan Pengurusan SKBP Online (Syarat Wisuda)</option>
-                            <option value="turnitin">Layanan Uji Turnitin Online (Plagiarisme)</option>
-                            <option value="penelusuran-literatur">Pemesanan Penelusuran Literatur & Jurnal</option>
-                            <option value="unggah-mandiri">Layanan Unggah Mandiri Karya Akhir (Repositori)</option>
-                        </optgroup>
-                    </select>
+            <!-- Step Progress Indicator -->
+            <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
+                <div id="univ-step1-indicator" class="flex items-center gap-2 p-2 rounded-xl bg-[#F0FDF4] text-[#0B6839] border border-[#BBF7D0] transition-all">
+                    <span class="w-5 h-5 rounded-full bg-[#0B6839] text-white flex items-center justify-center text-[10px] font-bold shrink-0">1</span>
+                    <span class="truncate">Pilih Ruangan & Status</span>
                 </div>
+                <div id="univ-step2-indicator" class="flex items-center gap-2 p-2 rounded-xl bg-[#F8FAF7] text-[#94A3B8] border border-[#E2E8F0] transition-all">
+                    <span id="univ-step2-badge" class="w-5 h-5 rounded-full bg-[#CBD5E1] text-white flex items-center justify-center text-[10px] font-bold shrink-0">2</span>
+                    <span class="truncate">Data Diri & Pengajuan</span>
+                </div>
+            </div>
 
-                <div class="grid grid-cols-2 gap-3">
+            <form id="universal-reservation-form" onsubmit="handleUniversalReservationSubmit(event)" class="space-y-4 text-xs sm:text-sm">
+                
+                <!-- STEP 1: PILIH RUANGAN, TANGGAL & CEK KETERSEDIAAN -->
+                <div id="univ-step-1-container" class="space-y-3.5">
                     <div>
-                        <label class="block text-xs font-bold text-[#0F172A] mb-1">Tanggal</label>
-                        <input type="date" id="univ-date" required class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs text-[#0F172A] outline-none focus:border-[#0B6839]" value="2026-09-03">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-[#0F172A] mb-1">Sesi Waktu</label>
-                        <select id="univ-time-slot" class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs font-medium text-[#0F172A] outline-none focus:border-[#0B6839]">
-                            <option value="08:00 - 10:00 WIB">08.00 – 10.00 WIB</option>
-                            <option value="10:00 - 12:00 WIB">10.00 – 12.00 WIB</option>
-                            <option value="13:00 - 15:00 WIB">13.00 – 15.00 WIB</option>
-                            <option value="15:00 - 17:00 WIB">15.00 – 17.00 WIB</option>
-                            <option value="17:00 - 19:30 WIB">17.00 – 19.30 WIB</option>
+                        <label class="block text-xs font-bold text-[#0F172A] mb-1">Pilihan Layanan / Ruangan</label>
+                        <select id="univ-service-select" onchange="handleRoomOrTimeChange()" class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs font-medium text-[#0F172A] outline-none focus:border-[#0B6839] focus:ring-1 focus:ring-[#0B6839]">
+                            <optgroup label="Area Belajar & Ruang Rapat (Lantai 1 - 3)">
+                                <option value="tgcl">The Gade Creative Lounge (Lantai 1 - Coworking)</option>
+                                <option value="rubelin">Ruang Belajar Individu / RUBELIN (Lantai 1 - Hening Kedap Suara)</option>
+                                <option value="rapat-lt1">Ruang Rapat Lantai 1 (Kapasitas 6 / 18 Orang)</option>
+                                <option value="rapat-lt2">Ruang Rapat Lantai 2 (Kapasitas 12 Orang)</option>
+                                <option value="rapat-lt3">Ruang Rapat Lantai 3 (Kapasitas 8 Orang)</option>
+                                <option value="konferensi">Ruang Konferensi (Lantai 1 - Kapasitas 70 Orang)</option>
+                            </optgroup>
+                            <optgroup label="Layanan Luring (Onsite)">
+                                <option value="sirkulasi">Layanan Sirkulasi & Peminjaman (Lantai 1)</option>
+                                <option value="keanggotaan">Layanan Keanggotaan & Aktivasi KTM (Lantai 2)</option>
+                                <option value="bimbingan">Layanan Bimbingan Pengguna & Orientasi</option>
+                                <option value="referensi">Layanan Referensi Dosen & Pascasarjana (Lantai 1)</option>
+                                <option value="kelas-literasi">Layanan Kelas Literasi Informasi & Pelatihan</option>
+                            </optgroup>
+                            <optgroup label="Layanan Daring (Online)">
+                                <option value="reservasi-buku">Reservasi Koleksi Buku Standar (DIGILIB OPAC)</option>
+                                <option value="skbp">Layanan Pengurusan SKBP Online (Syarat Wisuda)</option>
+                                <option value="turnitin">Layanan Uji Turnitin Online (Plagiarisme)</option>
+                                <option value="penelusuran-literatur">Pemesanan Penelusuran Literatur & Jurnal</option>
+                                <option value="unggah-mandiri">Layanan Unggah Mandiri Karya Akhir (Repositori)</option>
+                            </optgroup>
                         </select>
                     </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-[#0F172A] mb-1">Tanggal Reservasi</label>
+                            <input type="date" id="univ-date" onchange="handleRoomOrTimeChange()" required class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs font-medium text-[#0F172A] outline-none focus:border-[#0B6839] focus:ring-1 focus:ring-[#0B6839]">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-[#0F172A] mb-1">Sesi Waktu</label>
+                            <select id="univ-time-slot" onchange="handleRoomOrTimeChange()" class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs font-medium text-[#0F172A] outline-none focus:border-[#0B6839] focus:ring-1 focus:ring-[#0B6839]">
+                                <option value="08:00 - 10:00 WIB">08.00 – 10.00 WIB</option>
+                                <option value="10:00 - 12:00 WIB">10.00 – 12.00 WIB</option>
+                                <option value="13:00 - 15:00 WIB">13.00 – 15.00 WIB</option>
+                                <option value="15:00 - 17:00 WIB">15.00 – 17.00 WIB</option>
+                                <option value="17:00 - 19:30 WIB">17.00 – 19.30 WIB</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- LIVE STATUS DISPLAY CARD -->
+                    <div id="univ-status-card" class="p-3.5 rounded-xl border transition-all duration-300">
+                        <!-- Populated by JavaScript -->
+                    </div>
+
+                    <!-- Action Button to Step 2 (if available) -->
+                    <div id="univ-step1-action" class="pt-1">
+                        <button type="button" id="univ-btn-continue" onclick="proceedToStep2()" class="w-full usu-btn-primary py-2.5 text-xs font-bold flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all">
+                            <span>Lanjutkan Mengisi Formulir Pemohon</span>
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-[#0F172A] mb-1">NIM / NIP</label>
-                        <input type="text" id="univ-nim" placeholder="211402001 / NIP" required class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs text-[#0F172A] outline-none focus:border-[#0B6839]">
+                <!-- STEP 2: FORM IDENTITAS PEMOHON (Only revealed / activated if room is available) -->
+                <div id="univ-step-2-container" class="hidden space-y-3.5 pt-3 border-t border-[#E2E8F0] animate-fadeIn">
+                    
+                    <div class="flex items-center justify-between bg-[#F8FAF7] px-3.5 py-2 rounded-xl border border-[#E2E8F0]">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm text-[#0B6839]">badge</span>
+                            <span class="text-xs font-bold text-[#0F172A]">Informasi Pemohon</span>
+                        </div>
+                        <button type="button" onclick="backToStep1()" class="text-[11px] font-semibold text-[#0B6839] hover:underline flex items-center gap-1">
+                            <span class="material-symbols-outlined text-xs">edit_calendar</span>
+                            <span>Ubah Ruangan / Waktu</span>
+                        </button>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-[#0F172A] mb-1">Nama Lengkap</label>
-                        <input type="text" id="univ-name" placeholder="Nama pemohon" required class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs text-[#0F172A] outline-none focus:border-[#0B6839]">
-                    </div>
-                </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold text-[#0F172A] mb-1">Fakultas / Prodi</label>
-                        <input type="text" id="univ-fakultas" placeholder="Fasilkom-TI / Kedokteran / dll" required class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs text-[#0F172A] outline-none focus:border-[#0B6839]">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-[#0F172A] mb-1">NIM / NIP / No. Identitas <span class="text-[#EF4444]">*</span></label>
+                            <input type="text" id="univ-nim" placeholder="Contoh: 211402001 / NIP Dosen" required class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs text-[#0F172A] outline-none focus:border-[#0B6839] focus:ring-1 focus:ring-[#0B6839]">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-[#0F172A] mb-1">Nama Lengkap <span class="text-[#EF4444]">*</span></label>
+                            <input type="text" id="univ-name" placeholder="Nama pemohon" required class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs text-[#0F172A] outline-none focus:border-[#0B6839] focus:ring-1 focus:ring-[#0B6839]">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-[#0F172A] mb-1">No. WhatsApp</label>
-                        <input type="tel" id="univ-wa" placeholder="0812xxxxxxxx" required class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs text-[#0F172A] outline-none focus:border-[#0B6839]">
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-[#0F172A] mb-1">Fakultas / Program Studi <span class="text-[#EF4444]">*</span></label>
+                            <input type="text" id="univ-fakultas" placeholder="Fasilkom-TI / Kedokteran / dll" required class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs text-[#0F172A] outline-none focus:border-[#0B6839] focus:ring-1 focus:ring-[#0B6839]">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-[#0F172A] mb-1">No. WhatsApp Aktif <span class="text-[#EF4444]">*</span></label>
+                            <input type="tel" id="univ-wa" placeholder="0812xxxxxxxx" required class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs text-[#0F172A] outline-none focus:border-[#0B6839] focus:ring-1 focus:ring-[#0B6839]">
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-[#0F172A] mb-1">Keperluan / Keterangan</label>
-                    <textarea id="univ-purpose" rows="2" placeholder="Contoh: Diskusi tugas akhir kelompok / Bimbingan riset / Pengambilan buku" required class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs text-[#0F172A] outline-none focus:border-[#0B6839]"></textarea>
-                </div>
+                    <div>
+                        <label class="block text-xs font-bold text-[#0F172A] mb-1">Keperluan / Keterangan Pemakaian <span class="text-[#EF4444]">*</span></label>
+                        <textarea id="univ-purpose" rows="2" placeholder="Contoh: Diskusi tugas akhir kelompok / Bimbingan riset / Pengambilan buku sirkulasi" required class="w-full p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAF7] text-xs text-[#0F172A] outline-none focus:border-[#0B6839] focus:ring-1 focus:ring-[#0B6839]"></textarea>
+                    </div>
 
-                <div class="pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
-                    <span class="text-[11px] text-[#94A3B8]">Sistem Resmi Perpustakaan USU</span>
-                    <button type="submit" class="usu-btn-primary px-5 py-2 text-xs">
-                        Kirim Formulir Reservasi
-                    </button>
+                    <div class="pt-3 border-t border-[#E2E8F0] flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <span class="text-[11px] text-[#64748B] flex items-center gap-1">
+                            <span class="material-symbols-outlined text-xs text-[#10B981]">verified</span>
+                            <span>Sistem Resmi Perpustakaan USU</span>
+                        </span>
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <button type="button" onclick="backToStep1()" class="usu-btn-secondary px-3.5 py-2 text-xs flex-1 sm:flex-initial text-center">
+                                Kembali
+                            </button>
+                            <button type="submit" class="usu-btn-primary px-5 py-2 text-xs font-bold flex-1 sm:flex-initial flex items-center justify-center gap-1.5 shadow-sm">
+                                <span class="material-symbols-outlined text-sm">send</span>
+                                <span>Kirim Formulir Reservasi</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </form>
 
             <!-- Success State -->
             <div id="universal-res-success" class="hidden text-center py-4 space-y-3.5">
-                <div class="w-12 h-12 rounded-full bg-[#F0FDF4] text-[#10B981] flex items-center justify-center mx-auto">
+                <div class="w-12 h-12 rounded-full bg-[#F0FDF4] text-[#10B981] flex items-center justify-center mx-auto shadow-xs border border-[#DCFCE7]">
                     <span class="material-symbols-outlined text-3xl">check_circle</span>
                 </div>
                 <div>
                     <h4 class="text-base font-bold text-[#0F172A]">Reservasi Berhasil Diajukan!</h4>
                     <p class="text-xs text-[#64748B] max-w-sm mx-auto mt-1">
-                        Kode Tiket: <strong id="univ-res-code" class="text-[#0B6839] font-mono font-bold text-sm">USU-RES-9281</strong>
+                        Kode Tiket: <strong id="univ-res-code" class="text-[#0B6839] font-mono font-bold text-sm bg-[#F0FDF4] px-2 py-0.5 rounded border border-[#DCFCE7]">USU-RES-9281</strong>
                     </p>
                 </div>
-                <div class="bg-[#F8FAF7] p-3 rounded-xl border border-[#E2E8F0] text-left text-xs space-y-1 max-w-sm mx-auto text-[#64748B]">
-                    <div><strong>Layanan/Ruang:</strong> <span id="res-summary-service" class="text-[#0F172A]"></span></div>
-                    <div><strong>Waktu:</strong> <span id="res-summary-time" class="text-[#0F172A]"></span></div>
-                    <div><strong>Pemohon:</strong> <span id="res-summary-name" class="text-[#0F172A]"></span></div>
+                <div class="bg-[#F8FAF7] p-3.5 rounded-xl border border-[#E2E8F0] text-left text-xs space-y-1.5 max-w-sm mx-auto text-[#64748B]">
+                    <div><strong>Layanan/Ruang:</strong> <span id="res-summary-service" class="text-[#0F172A] font-semibold"></span></div>
+                    <div><strong>Waktu:</strong> <span id="res-summary-time" class="text-[#0F172A] font-semibold"></span></div>
+                    <div><strong>Pemohon:</strong> <span id="res-summary-name" class="text-[#0F172A] font-semibold"></span></div>
                 </div>
                 <div class="flex items-center justify-center gap-2 pt-2">
                     <button type="button" onclick="closeUniversalReservationModal()" class="usu-btn-secondary px-4 py-2 text-xs">
                         Tutup
                     </button>
-                    <button type="button" onclick="confirmToOfficer()" class="usu-btn-primary px-4 py-2 text-xs flex items-center gap-1.5">
+                    <button type="button" onclick="confirmToOfficer()" class="usu-btn-primary px-4 py-2 text-xs flex items-center gap-1.5 font-bold shadow-sm">
                         <span class="material-symbols-outlined text-sm">chat</span>
                         <span>Konfirmasi via WhatsApp</span>
                     </button>
@@ -844,16 +902,331 @@
             }
         }
 
-        // Universal Reservation Modal
+        // =========================================================================
+        // UNIVERSAL RESERVATION MODAL LOGIC & AVAILABILITY VERIFICATION
+        // =========================================================================
+        const ALL_TIME_SLOTS = [
+            '08:00 - 10:00 WIB',
+            '10:00 - 12:00 WIB',
+            '13:00 - 15:00 WIB',
+            '15:00 - 17:00 WIB',
+            '17:00 - 19:30 WIB'
+        ];
+
+        function checkRoomSlotAvailability(serviceKey, dateStr, slotStr) {
+            const isRoom = ['tgcl', 'rubelin', 'rapat-lt1', 'rapat-lt2', 'rapat-lt3', 'konferensi'].includes(serviceKey);
+            const service = SERVICES_DATA[serviceKey] || { title: 'Layanan Perpustakaan', location: 'Gedung Perpustakaan USU', desc: '' };
+            
+            if (!dateStr) {
+                return { isAvailable: false, status: 'unknown', message: 'Silakan pilih tanggal reservasi.' };
+            }
+
+            const date = new Date(dateStr + 'T00:00:00');
+            const dayOfWeek = date.getDay(); // 0 = Sunday
+
+            // Sunday: Closed
+            if (dayOfWeek === 0) {
+                return {
+                    isAvailable: false,
+                    status: 'closed',
+                    badge: 'Layanan Libur',
+                    color: 'red',
+                    serviceName: service.title,
+                    message: 'Gedung Perpustakaan USU tutup pada hari Minggu. Silakan pilih hari Senin s/d Sabtu.',
+                    availableSlots: []
+                };
+            }
+
+            // If non-room service (online or standard service desk)
+            if (!isRoom) {
+                return {
+                    isAvailable: true,
+                    status: 'available',
+                    badge: 'Layanan Tersedia',
+                    color: 'green',
+                    serviceName: service.title,
+                    message: 'Layanan ini siap diproses pada jadwal operasional perpustakaan.',
+                    capacity: 'Pelayanan Langsung / Online',
+                    location: service.location || 'Perpustakaan USU',
+                    availableSlots: ALL_TIME_SLOTS
+                };
+            }
+
+            // For study areas & meeting rooms: Calculate deterministic schedule collision
+            const dayNum = date.getDate();
+            const charCode = serviceKey.charCodeAt(0) + (serviceKey.charCodeAt(serviceKey.length - 1) || 0);
+            const collisionPattern = (dayNum * 11 + charCode) % 4;
+
+            let bookedSlots = [];
+            let bookedReason = 'Sedang dipinjam untuk bimbingan riset & agenda kegiatan akademik.';
+
+            if (dayOfWeek === 6) { // Saturday
+                bookedSlots = ['10:00 - 12:00 WIB'];
+                bookedReason = 'Sedang digunakan untuk diskusi kelompok riset akhir pekan.';
+            } else {
+                if (collisionPattern === 0) {
+                    bookedSlots = ['10:00 - 12:00 WIB'];
+                    bookedReason = 'Sedang digunakan oleh Tim Riset & Bimbingan Proposal Skripsi.';
+                } else if (collisionPattern === 1) {
+                    bookedSlots = ['13:00 - 15:00 WIB'];
+                    bookedReason = 'Sedang dipinjam untuk Rapat Koordinasi Akademik Fakultas.';
+                } else if (collisionPattern === 2) {
+                    bookedSlots = ['08:00 - 10:00 WIB', '15:00 - 17:00 WIB'];
+                    bookedReason = 'Sedang digunakan untuk Workshop Mahasiswa & Riset Kelompok.';
+                } else {
+                    bookedSlots = []; // Fully open
+                }
+            }
+
+            const isSlotBooked = bookedSlots.some(s => s.toLowerCase().replace(/\s/g, '').includes(slotStr.toLowerCase().replace(/\s/g, '')) || slotStr.toLowerCase().replace(/\s/g, '').includes(s.toLowerCase().replace(/\s/g, '')));
+            const freeSlots = ALL_TIME_SLOTS.filter(s => !bookedSlots.includes(s));
+
+            // Room details
+            let capacityText = 'Sesuai kapasitas';
+            if (serviceKey === 'tgcl') capacityText = 'Kapasitas 40 Orang';
+            else if (serviceKey === 'rubelin') capacityText = '5 Unit Ruang Hening Kedap Suara';
+            else if (serviceKey === 'rapat-lt1') capacityText = 'Kapasitas 6 & 18 Orang';
+            else if (serviceKey === 'rapat-lt2') capacityText = 'Kapasitas 12 Orang';
+            else if (serviceKey === 'rapat-lt3') capacityText = 'Kapasitas 8 Orang';
+            else if (serviceKey === 'konferensi') capacityText = 'Kapasitas 70 Orang';
+
+            if (isSlotBooked) {
+                return {
+                    isAvailable: false,
+                    status: 'booked',
+                    badge: 'Sedang Digunakan / Penuh',
+                    color: 'red',
+                    serviceName: service.title,
+                    location: service.location || 'Gedung Perpustakaan USU',
+                    capacity: capacityText,
+                    message: `Ruangan ini telah dipesan oleh pemustaka lain pada sesi <strong>${slotStr}</strong>. (${bookedReason})`,
+                    availableSlots: freeSlots
+                };
+            }
+
+            return {
+                isAvailable: true,
+                status: 'available',
+                badge: 'Tersedia Bebas',
+                color: 'green',
+                serviceName: service.title,
+                location: service.location || 'Gedung Perpustakaan USU',
+                capacity: capacityText,
+                message: `Ruangan bebas dan siap digunakan pada sesi <strong>${slotStr}</strong>.`,
+                availableSlots: freeSlots
+            };
+        }
+
+        function handleRoomOrTimeChange() {
+            const serviceKey = document.getElementById('univ-service-select').value;
+            const dateVal = document.getElementById('univ-date').value;
+            const slotVal = document.getElementById('univ-time-slot').value;
+
+            updateAvailabilityUI(serviceKey, dateVal, slotVal);
+        }
+
+        function selectAlternativeSlot(slotVal) {
+            const slotEl = document.getElementById('univ-time-slot');
+            if (slotEl) {
+                for (let i = 0; i < slotEl.options.length; i++) {
+                    if (slotEl.options[i].value === slotVal || slotEl.options[i].text.includes(slotVal) || slotVal.includes(slotEl.options[i].value)) {
+                        slotEl.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            handleRoomOrTimeChange();
+        }
+
+        async function updateAvailabilityUI(serviceKey, dateVal, slotVal) {
+            // First render local calculation for immediate smooth feedback
+            const localInfo = checkRoomSlotAvailability(serviceKey, dateVal, slotVal);
+            renderAvailabilityCard(localInfo);
+
+            // If it's a physical room, query live database API
+            const isRoom = ['tgcl', 'rubelin', 'rapat-lt1', 'rapat-lt2', 'rapat-lt3', 'konferensi'].includes(serviceKey);
+            if (isRoom && dateVal && slotVal) {
+                try {
+                    const res = await fetch(`/api/rooms/availability?room=${encodeURIComponent(serviceKey)}&date=${encodeURIComponent(dateVal)}&time_slot=${encodeURIComponent(slotVal)}`);
+                    if (res.ok) {
+                        const dbInfo = await res.json();
+                        const service = SERVICES_DATA[serviceKey] || {};
+                        dbInfo.location = service.location || 'Perpustakaan USU';
+                        dbInfo.capacity = localInfo.capacity;
+                        renderAvailabilityCard(dbInfo);
+                    }
+                } catch (e) {
+                    console.warn('API availability check error:', e);
+                }
+            }
+        }
+
+        function renderAvailabilityCard(info) {
+            const statusCard = document.getElementById('univ-status-card');
+            const step1Action = document.getElementById('univ-step1-action');
+            const continueBtn = document.getElementById('univ-btn-continue');
+            const step2Container = document.getElementById('univ-step-2-container');
+
+            if (!statusCard) return;
+
+            if (info.isAvailable) {
+                statusCard.className = 'p-4 rounded-xl border border-[#BBF7D0] bg-[#F0FDF4] space-y-2.5 transition-all duration-300 shadow-2xs';
+                statusCard.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse"></span>
+                            <span class="text-xs font-extrabold text-[#0B6839] uppercase tracking-wide">Status Ruangan: TERSEDIA</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#DCFCE7] text-[#15803D] border border-[#BBF7D0]">
+                            Siap Dipesan
+                        </span>
+                    </div>
+                    <p class="text-xs text-[#166534] leading-relaxed">
+                        ${info.message}
+                    </p>
+                    <div class="flex flex-wrap items-center gap-2 text-[11px] text-[#475569] pt-1 border-t border-[#DCFCE7]/70">
+                        <span class="inline-flex items-center gap-1 font-semibold text-[#0B6839]"><span class="material-symbols-outlined text-xs">location_on</span> ${info.location}</span>
+                        ${info.capacity ? `<span class="text-[#94A3B8]">•</span><span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-xs">group</span> ${info.capacity}</span>` : ''}
+                    </div>
+                `;
+
+                if (continueBtn) {
+                    continueBtn.classList.remove('hidden');
+                    continueBtn.innerHTML = `
+                        <span>Lanjutkan Mengisi Formulir Pemohon</span>
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    `;
+                }
+            } else {
+                // If booked / closed
+                statusCard.className = 'p-4 rounded-xl border border-[#FECACA] bg-[#FEF2F2] space-y-2.5 transition-all duration-300 shadow-2xs';
+                
+                let altHtml = '';
+                if (info.availableSlots && info.availableSlots.length > 0) {
+                    altHtml = `
+                        <div class="pt-2 border-t border-[#FEE2E2] space-y-1.5">
+                            <span class="text-[11px] font-bold text-[#991B1B] block">💡 Sesi Lain Yang Masih Tersedia di Tanggal Ini (Klik untuk Memilih):</span>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${info.availableSlots.map(s => `
+                                    <button type="button" onclick="selectAlternativeSlot('${s}')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-[#F0FDF4] text-[#0B6839] border border-[#BBF7D0] text-[11px] font-bold shadow-2xs hover:border-[#0B6839] transition-all flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-xs text-[#10B981]">check_circle</span>
+                                        <span>${s}</span>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                statusCard.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#EF4444] animate-ping"></span>
+                            <span class="text-xs font-extrabold text-[#EF4444] uppercase tracking-wide">Status Ruangan: ${info.badge}</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FEE2E2] text-[#EF4444] border border-[#FECACA]">
+                            Tidak Tersedia
+                        </span>
+                    </div>
+                    <p class="text-xs text-[#991B1B] leading-relaxed">
+                        ${info.message}
+                    </p>
+                    ${altHtml}
+                `;
+
+                if (continueBtn) {
+                    continueBtn.classList.add('hidden');
+                }
+
+                // If currently on step 2, roll back
+                if (step2Container && !step2Container.classList.contains('hidden')) {
+                    backToStep1();
+                }
+            }
+        }
+
+        function proceedToStep2() {
+            const step2Container = document.getElementById('univ-step-2-container');
+            const step1Action = document.getElementById('univ-step1-action');
+            const ind1 = document.getElementById('univ-step1-indicator');
+            const ind2 = document.getElementById('univ-step2-indicator');
+            const badge2 = document.getElementById('univ-step2-badge');
+
+            if (step2Container) {
+                step2Container.classList.remove('hidden');
+                if (step1Action) step1Action.classList.add('hidden');
+                
+                // Indicators
+                if (ind1) {
+                    ind1.className = 'flex items-center gap-2 p-2 rounded-xl bg-[#F8FAF7] text-[#64748B] border border-[#E2E8F0] transition-all cursor-pointer';
+                    ind1.setAttribute('onclick', 'backToStep1()');
+                }
+                if (ind2) {
+                    ind2.className = 'flex items-center gap-2 p-2 rounded-xl bg-[#F0FDF4] text-[#0B6839] border border-[#BBF7D0] transition-all';
+                }
+                if (badge2) {
+                    badge2.className = 'w-5 h-5 rounded-full bg-[#0B6839] text-white flex items-center justify-center text-[10px] font-bold shrink-0';
+                }
+
+                // Focus first input
+                setTimeout(() => {
+                    const nimInput = document.getElementById('univ-nim');
+                    if (nimInput) nimInput.focus();
+                    step2Container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+
+        function backToStep1() {
+            const step2Container = document.getElementById('univ-step-2-container');
+            const step1Action = document.getElementById('univ-step1-action');
+            const ind1 = document.getElementById('univ-step1-indicator');
+            const ind2 = document.getElementById('univ-step2-indicator');
+            const badge2 = document.getElementById('univ-step2-badge');
+
+            if (step2Container) {
+                step2Container.classList.add('hidden');
+                if (step1Action) step1Action.classList.remove('hidden');
+
+                if (ind1) {
+                    ind1.className = 'flex items-center gap-2 p-2 rounded-xl bg-[#F0FDF4] text-[#0B6839] border border-[#BBF7D0] transition-all';
+                    ind1.removeAttribute('onclick');
+                }
+                if (ind2) {
+                    ind2.className = 'flex items-center gap-2 p-2 rounded-xl bg-[#F8FAF7] text-[#94A3B8] border border-[#E2E8F0] transition-all';
+                }
+                if (badge2) {
+                    badge2.className = 'w-5 h-5 rounded-full bg-[#CBD5E1] text-white flex items-center justify-center text-[10px] font-bold shrink-0';
+                }
+            }
+        }
+
+        // Universal Reservation Modal Launcher
         function openUniversalReservationModal(serviceKey, dateVal, slotVal) {
             const selectEl = document.getElementById('univ-service-select');
             if (serviceKey && selectEl) {
                 selectEl.value = serviceKey;
             }
-            if (dateVal) {
-                const dateEl = document.getElementById('univ-date');
-                if (dateEl) dateEl.value = dateVal;
+            
+            const dateEl = document.getElementById('univ-date');
+            if (dateEl) {
+                if (dateVal) {
+                    dateEl.value = dateVal;
+                } else if (!dateEl.value) {
+                    const today = new Date();
+                    const y = today.getFullYear();
+                    const m = String(today.getMonth() + 1).padStart(2, '0');
+                    const d = String(today.getDate()).padStart(2, '0');
+                    dateEl.value = `${y}-${m}-${d}`;
+                }
+                // Set minimum date to today
+                const now = new Date();
+                const minY = now.getFullYear();
+                const minM = String(now.getMonth() + 1).padStart(2, '0');
+                const minD = String(now.getDate()).padStart(2, '0');
+                dateEl.min = `${minY}-${minM}-${minD}`;
             }
+
             if (slotVal) {
                 const slotEl = document.getElementById('univ-time-slot');
                 if (slotEl) {
@@ -865,6 +1238,13 @@
                     }
                 }
             }
+
+            // Reset steps
+            backToStep1();
+
+            // Run availability check
+            handleRoomOrTimeChange();
+
             document.getElementById('universal-reservation-form').classList.remove('hidden');
             document.getElementById('universal-res-success').classList.add('hidden');
             document.getElementById('universal-res-modal').classList.remove('hidden');
