@@ -42,11 +42,6 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    public function isPustakawan(): bool
-    {
-        return $this->role === 'pustakawan';
-    }
-
     /** @return HasMany<RoomReservation, $this> */
     public function reservations(): HasMany
     {

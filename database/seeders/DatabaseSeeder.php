@@ -19,16 +19,6 @@ class DatabaseSeeder extends Seeder
             'phone' => '081234567890',
         ]);
 
-        // Pustakawan user
-        User::factory()->create([
-            'name' => 'Pustakawan USU',
-            'email' => 'pustakawan@perpustakaan.usu.ac.id',
-            'role' => 'pustakawan',
-            'nim_nip' => '199003152015041002',
-            'fakultas' => null,
-            'phone' => '081298765432',
-        ]);
-
         // Sample mahasiswa
         User::factory()->create([
             'name' => 'Mahasiswa Demo',
@@ -49,6 +39,7 @@ class DatabaseSeeder extends Seeder
             FaqSeeder::class,
             ContactSeeder::class,
             HolidaySeeder::class,
+            RoomReservationSeeder::class,
         ]);
     }
 }
