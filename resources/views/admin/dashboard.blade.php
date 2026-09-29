@@ -47,17 +47,15 @@
         </div>
     </div>
 
-    {{-- Pesan Masuk --}}
+    {{-- Total Histori Reservasi --}}
     <div class="stat-card">
-        <div class="stat-icon-wrap bg-[#FFF1F2]">
-            <span class="material-symbols-outlined text-2xl text-[#E11D48]" style="font-variation-settings:'FILL' 1,'wght' 600;">mark_email_unread</span>
+        <div class="stat-icon-wrap bg-[#F0FDF4]">
+            <span class="material-symbols-outlined text-2xl text-[#059669]" style="font-variation-settings:'FILL' 1,'wght' 600;">history</span>
         </div>
         <div class="flex-1 min-w-0">
-            <p class="text-xs text-[#64748B] font-medium">Pesan Belum Dibalas</p>
-            <p class="text-2xl font-extrabold text-[#0F172A] leading-tight">{{ number_format($stats['unread_messages']) }}</p>
-            <p class="text-[11px] {{ $stats['unread_messages'] > 0 ? 'text-red-500 font-semibold' : 'text-[#94A3B8]' }} mt-0.5">
-                {{ $stats['unread_messages'] > 0 ? 'Perlu perhatian' : 'Semua sudah dibalas' }}
-            </p>
+            <p class="text-xs text-[#64748B] font-medium">Total Seluruh Reservasi</p>
+            <p class="text-2xl font-extrabold text-[#0F172A] leading-tight">{{ number_format($stats['total_history']) }}</p>
+            <p class="text-[11px] text-[#059669] font-semibold mt-0.5">Histori tercatat</p>
         </div>
     </div>
 </div>
@@ -79,12 +77,12 @@
 
     <div class="bg-gradient-to-r from-[#1E3A5F] to-[#1E40AF] rounded-2xl p-5 flex items-center justify-between text-white border border-blue-700/40">
         <div>
-            <p class="text-xs text-white/60 font-medium">Berita Terpublikasi</p>
-            <p class="text-3xl font-extrabold mt-1">{{ $stats['total_news'] }}</p>
-            <p class="text-[11px] text-white/50 mt-0.5">Artikel aktif</p>
+            <p class="text-xs text-white/60 font-medium">Reservasi Disetujui</p>
+            <p class="text-3xl font-extrabold mt-1">{{ $stats['confirmed_reservations'] }}</p>
+            <p class="text-[11px] text-white/50 mt-0.5">Siap digunakan</p>
         </div>
         <div class="w-14 h-14 rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center">
-            <span class="material-symbols-outlined text-3xl text-[#93C5FD]" style="font-variation-settings:'FILL' 1,'wght' 600;">newspaper</span>
+            <span class="material-symbols-outlined text-3xl text-[#93C5FD]" style="font-variation-settings:'FILL' 1,'wght' 600;">check_circle</span>
         </div>
     </div>
 </div>
@@ -101,7 +99,7 @@
                 <span class="material-symbols-outlined text-[#0B6839] text-lg" style="font-variation-settings:'FILL' 1,'wght' 600;">event_available</span>
                 <h3 class="text-sm font-bold text-[#0F172A]">Reservasi Terbaru</h3>
             </div>
-            <a href="#" class="text-xs font-semibold text-[#0B6839] hover:underline">Lihat Semua →</a>
+            <a href="{{ route('admin.reservations') }}" class="text-xs font-semibold text-[#0B6839] hover:underline">Lihat Semua →</a>
         </div>
 
         @if($latestReservations->isEmpty())
@@ -167,7 +165,7 @@
                 <span class="material-symbols-outlined text-[#6366F1] text-lg" style="font-variation-settings:'FILL' 1,'wght' 600;">person_add</span>
                 <h3 class="text-sm font-bold text-[#0F172A]">Pengguna Terbaru</h3>
             </div>
-            <a href="#" class="text-xs font-semibold text-[#0B6839] hover:underline">Lihat Semua →</a>
+            <a href="{{ route('admin.users') }}" class="text-xs font-semibold text-[#0B6839] hover:underline">Lihat Semua →</a>
         </div>
 
         @if($latestUsers->isEmpty())
@@ -220,71 +218,28 @@
             <span class="material-symbols-outlined text-[#F6AE01] text-lg" style="font-variation-settings:'FILL' 1,'wght' 600;">bolt</span>
             Aksi Cepat
         </h3>
-        <div class="grid grid-cols-2 gap-3">
-            <a href="#" class="quick-action-btn">
+        <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3">
+            <a href="{{ route('admin.rooms') }}" class="quick-action-btn">
                 <span class="material-symbols-outlined text-2xl text-[#0B6839]" style="font-variation-settings:'FILL' 1,'wght' 500;">add_home_work</span>
-                <span class="text-xs font-semibold">Tambah Ruangan</span>
+                <span class="text-xs font-semibold">Kelola Ruangan</span>
             </a>
-            <a href="#" class="quick-action-btn">
-                <span class="material-symbols-outlined text-2xl text-[#6366F1]" style="font-variation-settings:'FILL' 1,'wght' 500;">edit_note</span>
-                <span class="text-xs font-semibold">Tambah Berita</span>
+            <a href="{{ route('admin.schedule') }}" class="quick-action-btn">
+                <span class="material-symbols-outlined text-2xl text-[#6366F1]" style="font-variation-settings:'FILL' 1,'wght' 500;">calendar_month</span>
+                <span class="text-xs font-semibold">Jadwal Ruangan</span>
             </a>
-            <a href="#" class="quick-action-btn">
+            <a href="{{ route('admin.reservations', ['status' => 'pending']) }}" class="quick-action-btn">
                 <span class="material-symbols-outlined text-2xl text-[#EA580C]" style="font-variation-settings:'FILL' 1,'wght' 500;">pending_actions</span>
                 <span class="text-xs font-semibold">Tinjau Reservasi</span>
             </a>
-            <a href="#" class="quick-action-btn">
-                <span class="material-symbols-outlined text-2xl text-[#E11D48]" style="font-variation-settings:'FILL' 1,'wght' 500;">mark_email_read</span>
-                <span class="text-xs font-semibold">Balas Pesan</span>
+            <a href="{{ route('admin.history') }}" class="quick-action-btn">
+                <span class="material-symbols-outlined text-2xl text-[#059669]" style="font-variation-settings:'FILL' 1,'wght' 500;">history</span>
+                <span class="text-xs font-semibold">Histori Reservasi</span>
             </a>
-            <a href="#" class="quick-action-btn">
-                <span class="material-symbols-outlined text-2xl text-[#0EA5E9]" style="font-variation-settings:'FILL' 1,'wght' 500;">person_add</span>
-                <span class="text-xs font-semibold">Tambah User</span>
-            </a>
-            <a href="{{ route('beranda') }}" target="_blank" class="quick-action-btn">
-                <span class="material-symbols-outlined text-2xl text-[#64748B]" style="font-variation-settings:'FILL' 1,'wght' 500;">open_in_new</span>
-                <span class="text-xs font-semibold">Lihat Situs</span>
+            <a href="{{ route('admin.users') }}" class="quick-action-btn">
+                <span class="material-symbols-outlined text-2xl text-[#0EA5E9]" style="font-variation-settings:'FILL' 1,'wght' 500;">group</span>
+                <span class="text-xs font-semibold">Kelola Pengguna</span>
             </a>
         </div>
-    </div>
-
-    {{-- Pesan Masuk Terbaru --}}
-    <div class="admin-table-wrap xl:col-span-2">
-        <div class="admin-table-header">
-            <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-[#E11D48] text-lg" style="font-variation-settings:'FILL' 1,'wght' 600;">forum</span>
-                <h3 class="text-sm font-bold text-[#0F172A]">Pesan Masuk Terbaru</h3>
-            </div>
-            <a href="#" class="text-xs font-semibold text-[#0B6839] hover:underline">Lihat Semua →</a>
-        </div>
-
-        @if($latestMessages->isEmpty())
-            <div class="py-12 text-center">
-                <span class="material-symbols-outlined text-4xl text-[#CBD5E1]" style="font-variation-settings:'FILL' 1,'wght' 400;">mark_email_read</span>
-                <p class="text-sm text-[#94A3B8] mt-2">Tidak ada pesan masuk</p>
-            </div>
-        @else
-            <div class="divide-y divide-[#F1F5F9]">
-                @foreach($latestMessages as $message)
-                    <div class="px-5 py-3.5 flex items-start gap-3 hover:bg-[#FAFFFE] transition-colors">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#E11D48] to-[#9F1239] flex items-center justify-center text-white text-[11px] font-bold shrink-0">
-                            {{ strtoupper(substr($message->name, 0, 1)) }}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between gap-2">
-                                <p class="text-sm font-semibold text-[#0F172A] truncate">{{ $message->name }}</p>
-                                <p class="text-[11px] text-[#94A3B8] whitespace-nowrap shrink-0">{{ $message->created_at->diffForHumans() }}</p>
-                            </div>
-                            <p class="text-xs text-[#64748B] truncate">{{ $message->subject }}</p>
-                            <p class="text-[11px] text-[#94A3B8] truncate">{{ Str::limit($message->message, 60) }}</p>
-                        </div>
-                        @if($message->status === 'pending')
-                            <span class="badge badge-pending shrink-0">Baru</span>
-                        @endif
-                    </div>
-                @endforeach
-            </div>
-        @endif
     </div>
 </div>
 

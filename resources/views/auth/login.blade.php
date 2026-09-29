@@ -296,10 +296,10 @@
                     </div>
                 </div>
                 <div class="stat-badge">
-                    <span class="material-symbols-outlined text-[#F472B6] text-xl" style="font-variation-settings:'FILL' 1,'wght' 600;">mark_email_unread</span>
+                    <span class="material-symbols-outlined text-[#34D399] text-xl" style="font-variation-settings:'FILL' 1,'wght' 600;">meeting_room</span>
                     <div>
-                        <p class="text-base font-bold leading-none">{{ \App\Models\ContactMessage::where('status','pending')->count() }}</p>
-                        <p class="text-[11px] text-white/60">Pesan Masuk</p>
+                        <p class="text-base font-bold leading-none">{{ \App\Models\Room::where('is_active', true)->count() }}</p>
+                        <p class="text-[11px] text-white/60">Ruangan Aktif</p>
                     </div>
                 </div>
             </div>

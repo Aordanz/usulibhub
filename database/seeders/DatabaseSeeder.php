@@ -11,8 +11,9 @@ class DatabaseSeeder extends Seeder
     {
         // Admin user
         User::factory()->create([
-            'name' => 'Admin Perpustakaan',
+            'name' => 'admin',
             'email' => 'admin@perpustakaan.usu.ac.id',
+            'password' => bcrypt('admin123'),
             'role' => 'admin',
             'nim_nip' => '198501012010011001',
             'fakultas' => null,
@@ -35,7 +36,6 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             DigitalPortalSeeder::class,
             StatisticSeeder::class,
-            NewsSeeder::class,
             FaqSeeder::class,
             ContactSeeder::class,
             HolidaySeeder::class,

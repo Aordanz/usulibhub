@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\RoomScheduleController;
 use Illuminate\Support\Facades\Route;
 
 // ── Auth ────────────────────────────────────────────────────────────────
@@ -15,9 +16,22 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 // ── Admin Area ───────────────────────────────────────────────────────────
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
-});
 
-use App\Http\Controllers\RoomScheduleController;
+    // Pengguna
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('users.destroy');
+
+    // Ruangan & Jadwal
+    Route::get('/rooms', [AdminController::class, 'rooms'])->name('rooms');
+    Route::patch('/rooms/{room}/toggle', [AdminController::class, 'toggleRoom'])->name('rooms.toggle');
+    Route::get('/schedule', [AdminController::class, 'schedule'])->name('schedule');
+
+    // Reservasi & Histori
+    Route::get('/reservations', [AdminController::class, 'reservations'])->name('reservations');
+    Route::patch('/reservations/{reservation}/approve', [AdminController::class, 'approveReservation'])->name('reservations.approve');
+    Route::patch('/reservations/{reservation}/reject', [AdminController::class, 'rejectReservation'])->name('reservations.reject');
+    Route::get('/history', [AdminController::class, 'history'])->name('history');
+});
 
 // ── Public Pages ─────────────────────────────────────────────────────────
 Route::get('/', function () {
