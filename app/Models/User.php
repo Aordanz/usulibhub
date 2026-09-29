@@ -47,16 +47,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(RoomReservation::class);
     }
-
-    /** @return HasMany<ContactMessage, $this> */
-    public function contactMessages(): HasMany
-    {
-        return $this->hasMany(ContactMessage::class);
-    }
-
-    /** @return HasMany<News, $this> */
-    public function news(): HasMany
-    {
-        return $this->hasMany(News::class, 'author_id');
-    }
 }

@@ -289,77 +289,31 @@
 
         <p class="nav-section-label">Manajemen</p>
 
-        <a href="#" class="nav-item {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
-            <span class="nav-icon material-symbols-outlined">group</span>
+        <a href="{{ route('admin.users') }}" class="nav-item {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+            <span class="nav-icon material-symbols-outlined" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.users*') ? 1 : 0 }},'wght' 500;">group</span>
             Pengguna
         </a>
-        <a href="#" class="nav-item {{ request()->routeIs('admin.rooms*') ? 'active' : '' }}">
-            <span class="nav-icon material-symbols-outlined">meeting_room</span>
+        <a href="{{ route('admin.rooms') }}" class="nav-item {{ request()->routeIs('admin.rooms*') ? 'active' : '' }}">
+            <span class="nav-icon material-symbols-outlined" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.rooms*') ? 1 : 0 }},'wght' 500;">meeting_room</span>
             Ruangan
         </a>
-        <a href="#" class="nav-item {{ request()->routeIs('admin.reservations*') ? 'active' : '' }}">
-            <span class="nav-icon material-symbols-outlined">event_available</span>
+        <a href="{{ route('admin.reservations') }}" class="nav-item {{ request()->routeIs('admin.reservations*') ? 'active' : '' }}">
+            <span class="nav-icon material-symbols-outlined" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.reservations*') ? 1 : 0 }},'wght' 500;">event_available</span>
             Reservasi
-            @if(isset($stats) && $stats['pending_reservations'] > 0)
+            @php $pendingCount = \App\Models\RoomReservation::where('status', 'pending')->count(); @endphp
+            @if($pendingCount > 0)
                 <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">
-                    {{ $stats['pending_reservations'] }}
+                    {{ $pendingCount }}
                 </span>
             @endif
         </a>
-
-        <p class="nav-section-label">Konten</p>
-
-        <a href="#" class="nav-item {{ request()->routeIs('admin.news*') ? 'active' : '' }}">
-            <span class="nav-icon material-symbols-outlined">newspaper</span>
-            Berita & Pengumuman
+        <a href="{{ route('admin.schedule') }}" class="nav-item {{ request()->routeIs('admin.schedule*') ? 'active' : '' }}">
+            <span class="nav-icon material-symbols-outlined" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.schedule*') ? 1 : 0 }},'wght' 500;">calendar_month</span>
+            Jadwal Ruangan
         </a>
-        <a href="#" class="nav-item {{ request()->routeIs('admin.faqs*') ? 'active' : '' }}">
-            <span class="nav-icon material-symbols-outlined">help</span>
-            FAQ
-        </a>
-        <a href="#" class="nav-item {{ request()->routeIs('admin.services*') ? 'active' : '' }}">
-            <span class="nav-icon material-symbols-outlined">category</span>
-            Layanan
-        </a>
-        <a href="#" class="nav-item {{ request()->routeIs('admin.portals*') ? 'active' : '' }}">
-            <span class="nav-icon material-symbols-outlined">hub</span>
-            Portal Digital
-        </a>
-
-        <p class="nav-section-label">Komunikasi</p>
-
-        <a href="#" class="nav-item {{ request()->routeIs('admin.messages*') ? 'active' : '' }}">
-            <span class="nav-icon material-symbols-outlined">mark_email_unread</span>
-            Pesan Masuk
-            @if(isset($stats) && $stats['unread_messages'] > 0)
-                <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-400/20 text-red-300 border border-red-400/30">
-                    {{ $stats['unread_messages'] }}
-                </span>
-            @endif
-        </a>
-
-        <p class="nav-section-label">Sistem</p>
-
-        <a href="#" class="nav-item">
-            <span class="nav-icon material-symbols-outlined">bar_chart</span>
-            Statistik
-        </a>
-        <a href="#" class="nav-item">
-            <span class="nav-icon material-symbols-outlined">schedule</span>
-            Jam Operasional
-        </a>
-        <a href="#" class="nav-item">
-            <span class="nav-icon material-symbols-outlined">settings</span>
-            Pengaturan
-        </a>
-
-        {{-- Divider --}}
-        <div class="my-3 border-t border-white/7"></div>
-
-        {{-- Back to site --}}
-        <a href="{{ route('beranda') }}" target="_blank" class="nav-item text-white/40 hover:text-white/60">
-            <span class="nav-icon material-symbols-outlined text-base">open_in_new</span>
-            Lihat Situs Publik
+        <a href="{{ route('admin.history') }}" class="nav-item {{ request()->routeIs('admin.history*') ? 'active' : '' }}">
+            <span class="nav-icon material-symbols-outlined" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.history*') ? 1 : 0 }},'wght' 500;">history</span>
+            Histori Reservasi
         </a>
     </nav>
 

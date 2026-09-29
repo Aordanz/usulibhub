@@ -2,10 +2,15 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ServicePagesTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected bool $seed = true;
+
     public function test_homepage_returns_successful_response(): void
     {
         $response = $this->get('/');
